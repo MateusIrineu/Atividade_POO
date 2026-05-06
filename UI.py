@@ -1,7 +1,7 @@
 # from Cliente import Cliente, ClienteDAO
 # from Categoria import Categoria, CategoriaDAO
 # from Produto import Produto, ProdutoDAO
-from View import View
+from Admin.View import View as AdminView
 
 class UI:
     @staticmethod
@@ -33,7 +33,7 @@ class UI:
         print("13-Fim")
         return int(input("Informe uma opção: "))
     
-#CLIENTE
+#CLIENTE POR ADMIN
     
     def cliente_inserir():                           
         print("Cadastro de Clientes")
@@ -41,7 +41,7 @@ class UI:
         email = input("Informe o e-mail: ")
         fone = input("Informe o fone: ")
         # c = View(0, nome, email, fone)
-        View.cliente_inserir(nome, email, fone)
+        AdminView.cliente_inserir(nome, email, fone)
 
     def cliente_listar():                            
         print("Listagem de Clientes")
@@ -55,24 +55,24 @@ class UI:
         email = input("Informe o novo e-mail: ")
         fone = input("Informe o novo fone: ")
         # c = Cliente(id, nome, email, fone)
-        View.cliente_atualizar(id, nome, email, fone)
+        AdminView.cliente_atualizar(id, nome, email, fone)
 
     def cliente_excluir():                           
         UI.cliente_listar()
         id = int(input("Qual o id do cliente a ser excluído: "))
         # c = Cliente(id, "", "", "")
-        View.cliente_excluir(id)
+        AdminView.cliente_excluir(id)
 
-#CATEGORIA
+#CATEGORIA POR ADMIN
     def categoria_inserir():                           
         print("Cadastro de Categorias")
         desc = input("Informe a descrição: ")
         # c = Categoria(0, desc)
-        View.categoria_inserir(desc)
+        AdminView.categoria_inserir(desc)
 
     def categoria_listar():                            
         print("Listagem de Categorias")
-        for c in View.categoria_listar(): 
+        for c in AdminView.categoria_listar(): 
             print(c)
 
     def categoria_atualizar():
@@ -80,15 +80,15 @@ class UI:
         id = int(input("Qual o id da categoria a ser atualizado: "))
         desc = input("Informe a nova descrição: ")
         # c = Categoria(id, desc)
-        View.categoria_atualizar(id, desc)
+        AdminView.categoria_atualizar(id, desc)
 
     def categoria_excluir():
         UI.categoria_listar()
         id = int(input("Qual o id da categoria a ser excluído: "))
         # c = Categoria(id, "")
-        View.categoria_excluir(id)
+        AdminView.categoria_excluir(id)
 
-# PRODUTO
+# PRODUTO POR ADMIN
 
     def produto_inserir():
         print("Cadastro de Produtos")
@@ -97,11 +97,11 @@ class UI:
         estoque = int(input("Informe a quantidade em estoque: "))
         idCategoria = int(input("Insira a categoria do produto: "))
         # p = Produto(0, descricao, preco, estoque, idCategoria)
-        View.produto_inserir(descricao, preco, estoque, idCategoria)
+        AdminView.produto_inserir(descricao, preco, estoque, idCategoria)
 
     def produto_listar():
         print("Listagem de Produtos")
-        for p in View.produto_listar():
+        for p in AdminView.produto_listar():
             print(p)
     
     def produto_atualizar():
@@ -112,13 +112,13 @@ class UI:
         estoque = int(input("Insira a nova quantidade em estoque: "))
         idCategoria = int(input("Insira o id da nova categoria do produto: "))
         # p = Produto(id, descricao, preco, estoque, idCategoria)
-        View.produto_atualizar(id, descricao, preco, estoque, idCategoria)
+        AdminView.produto_atualizar(id, descricao, preco, estoque, idCategoria)
     
     def produto_excluir():
         UI.produto_listar()
         id = int(input("Insira o id do produto a ser excluído: "))
         # p = Produto(id, "", 0.0, 0, 0)
-        View.produto_excluir(id)
+        AdminView.produto_excluir(id)
 
 
 UI.main()

@@ -1,6 +1,6 @@
-from Cliente import Cliente, ClienteDAO
-from Categoria import Categoria, CategoriaDAO
-from Produto import Produto, ProdutoDAO
+from Admin.Cliente import Cliente, ClienteDAO
+from Admin.Categoria import Categoria, CategoriaDAO
+from Admin.Produto import Produto, ProdutoDAO
 
 class View:
     #CLIENTE
