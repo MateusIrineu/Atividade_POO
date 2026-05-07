@@ -5,8 +5,8 @@ from Admin.Produto import Produto, ProdutoDAO
 class View:
     #CLIENTE
     @staticmethod
-    def cliente_inserir(nome, email, fone):
-        c = Cliente(0, nome, email, fone)
+    def cliente_inserir(nome, senha, email, fone):
+        c = Cliente(0, nome, senha, email, fone)
         ClienteDAO.inserir(c)
 
     @staticmethod
@@ -14,13 +14,13 @@ class View:
         return ClienteDAO.listar()
     
     @staticmethod
-    def cliente_atualizar(id, nome, email, fone):                         
-        c = Cliente(id, nome, email, fone)
+    def cliente_atualizar(id, nome, senha, email, fone):                         
+        c = Cliente(id, nome, senha, email, fone)
         ClienteDAO.atualizar(c)
 
     @staticmethod
     def cliente_excluir(id):                           
-        c = Cliente(id, "", "", "")
+        c = Cliente(id, "", "", "", "")
         ClienteDAO.excluir(c)
 
     #CATEGORIA

@@ -1,4 +1,3 @@
-import json
 from Admin.Cliente import Cliente, ClienteDAO 
 
 class Login:
