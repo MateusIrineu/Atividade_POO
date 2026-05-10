@@ -4,11 +4,11 @@ class Cliente:
     def __init__(self, id, nome, email, senha, fone):
         self.id = id
         self.nome = nome
-        self.senha = senha
         self.email = email
+        self.senha = senha
         self.fone = fone
     def __str__(self):
-        return f"{self.id} - {self.nome} - {self.senha} - {self.email} - {self.fone}"
+        return f"{self.id} - {self.nome} - {self.email} - {self.senha} - {self.fone}"
     
 class ClienteDAO:
     objetos = []
@@ -66,7 +66,7 @@ class ClienteDAO:
             with open("clientes.json", mode="r") as arquivo:
                 clientes_json = json.load(arquivo)
                 for obj in clientes_json:
-                    c = Cliente(obj["id"], obj["nome"], obj["email"], obj["fone"])
+                    c = Cliente(obj["id"], obj["nome"], obj["email"], obj["senha"], obj["fone"])
                     ClienteDAO.objetos.append(c)        
         except FileNotFoundError:
             ClienteDAO.objetos = []

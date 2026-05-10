@@ -6,7 +6,7 @@ class Login:
         self.senha = senha
 
     def __str__(self):
-        return f"`{self.email} - {self.senha}"
+        return f"{self.email} - {self.senha}"
     
 class LoginDAO:
     usuario_logado = False

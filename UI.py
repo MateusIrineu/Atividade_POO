@@ -5,6 +5,32 @@ from Admin.View import View as AdminView
 from Visitante.View import View as LoginView
 
 class UI:
+    #CRIAÇÃO DE CONTA OU LOGIN
+    @staticmethod
+    def home():
+        print("Digite 1 para criar conta.")
+        print("Digite 2 para criar logar no sistema.")
+        print("Digite 0 para fechar o sistema.")
+        resposta = int(input("Resposta: "))
+        if resposta == 1:
+            UI.criar_usuario()
+        elif resposta == 2:
+            UI.validacao()
+        else:
+            print("Fechando o sistema...")
+    
+    #CRIANDO USUARIO
+    @staticmethod
+    def criar_usuario():                           
+        print("Cadastro de Clientes")
+        nome = input("Informe o nome: ")
+        email = input("Informe o e-mail: ")
+        senha = input("Informe a senha: ")
+        fone = input("Informe o fone: ")
+        # c = View(0, nome, email, fone)
+        AdminView.cliente_inserir(nome, email, senha, fone)
+        UI.home()
+
     #VALIDAÇÃO DE USUÁRIO
     @staticmethod
     def validacao():
@@ -85,11 +111,11 @@ class UI:
     def cliente_inserir():                           
         print("Cadastro de Clientes")
         nome = input("Informe o nome: ")
-        senha = input("Informe a senha: ")
         email = input("Informe o e-mail: ")
+        senha = input("Informe a senha: ")
         fone = input("Informe o fone: ")
         # c = View(0, nome, email, fone)
-        AdminView.cliente_inserir(nome, senha, email, fone)
+        AdminView.cliente_inserir(nome, email, senha, fone)
 
     @staticmethod
     def cliente_listar():                            
@@ -106,7 +132,7 @@ class UI:
         senha = input("Informe a nova senha: ")
         fone = input("Informe o novo fone: ")
         # c = Cliente(id, nome, email, fone)
-        AdminView.cliente_atualizar(id, nome, email, fone)
+        AdminView.cliente_atualizar(id, nome, email, senha, fone)
 
     @staticmethod
     def cliente_excluir():                           
@@ -145,7 +171,6 @@ class UI:
         AdminView.categoria_excluir(id)
 
 # PRODUTO POR ADMIN
-
     @staticmethod
     def produto_inserir():
         print("Cadastro de Produtos")
@@ -181,4 +206,4 @@ class UI:
         AdminView.produto_excluir(id)
 
 
-UI.validacao()
+UI.home()

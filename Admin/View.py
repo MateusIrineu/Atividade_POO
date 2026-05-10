@@ -5,8 +5,8 @@ from Admin.Produto import Produto, ProdutoDAO
 class View:
     #CLIENTE
     @staticmethod
-    def cliente_inserir(nome, senha, email, fone):
-        c = Cliente(0, nome, senha, email, fone)
+    def cliente_inserir(nome, email, senha, fone):
+        c = Cliente(0, nome, email, senha, fone)
         ClienteDAO.inserir(c)
 
     @staticmethod
@@ -14,8 +14,8 @@ class View:
         return ClienteDAO.listar()
     
     @staticmethod
-    def cliente_atualizar(id, nome, senha, email, fone):                         
-        c = Cliente(id, nome, senha, email, fone)
+    def cliente_atualizar(id, nome, email, senha, fone):                         
+        c = Cliente(id, nome, email, senha, fone)
         ClienteDAO.atualizar(c)
 
     @staticmethod
