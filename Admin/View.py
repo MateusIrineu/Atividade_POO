@@ -1,6 +1,7 @@
 from Admin.Cliente import Cliente, ClienteDAO
 from Admin.Categoria import Categoria, CategoriaDAO
 from Admin.Produto import Produto, ProdutoDAO
+from Cliente.Carrinho import Carrinho, CarrinhoDAO
 
 class View:
     #CLIENTE
@@ -62,3 +63,8 @@ class View:
     def produto_excluir(id):
         p = Produto(id, "", 0.0, 0, 0)
         ProdutoDAO().excluir(p)
+
+    #VENDA
+    @staticmethod
+    def listar_vendas():
+        return CarrinhoDAO.listar_compras()

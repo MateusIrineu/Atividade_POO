@@ -3,6 +3,7 @@
 # from Produto import Produto, ProdutoDAO
 from Admin.View import View as AdminView
 from Visitante.View import View as LoginView
+from Cliente.View import View as ClienteView
 
 class UI:
     #CRIAÇÃO DE CONTA OU LOGIN
@@ -47,12 +48,13 @@ class UI:
                 UI.cliente_main()
         else:
             print("Email e/ou senha incorretos!")
+            UI.validacao()
 
     #TELA DE ACESSO DO ADMIN
     @staticmethod
     def main():
         op = 0
-        while op != 13:
+        while True:
             op = UI.menu()
             if op == 1: UI.cliente_inserir()
             if op == 2: UI.cliente_listar()
@@ -66,18 +68,21 @@ class UI:
             if op == 10: UI.produto_listar()
             if op == 11: UI.produto_atualizar()
             if op == 12: UI.produto_excluir()
+            if op == 13: UI.validacao()
 
     #TELA DE ACESSO DO CLIENTE
     @staticmethod
     def cliente_main():
         op = 0
-        while op != 6:
+        while True:
             op = UI.cliente_menu()
             if op == 1: UI.inserir_produto()
             if op == 2: UI.listar_produtos()
             if op == 3: UI.listar_compras()
             if op == 4: UI.visualizar_carrinho()
             if op == 5: UI.comprar_carrinho()
+            if op == 6: UI.limpar_carrinho()
+            if op == 7: UI.validacao()
 
 
     #MENU ADMIN
@@ -93,6 +98,7 @@ class UI:
         print("9 - Inserir 10 - Listar 11 - Atualizar 12 - Excluir")
         print("----------------------------------------")
         print("13 - Sair do sistema")
+        #UI.validacao()
         return int(input("Informe uma opção: "))
     
     #MENU CLIENTE
@@ -100,10 +106,11 @@ class UI:
     def cliente_menu():
         print("1 - Inserir produto")
         print("2 - Listar produtos")
-        print("3 - Lisar Compras")
+        print("3 - Listar Compras")
         print("4 - Visualizar Carrinho")
         print("5 - Comprar Carrinho")
-        print("6 - Sair do Sistema")
+        print("6 - Limpar Carrinho")
+        print("7 - Sair do Sistema")
         return int(input("Informe uma opção: "))
     
 #CLIENTE POR ADMIN
@@ -204,6 +211,56 @@ class UI:
         id = int(input("Insira o id do produto a ser excluído: "))
         # p = Produto(id, "", 0.0, 0, 0)
         AdminView.produto_excluir(id)
+
+# CLIENTE (CARRINHO E COMPRAS)
+    @staticmethod
+    def listar_produtos():
+        print("Listagem de Produtos Disponíveis")
+        for p in ClienteView.listar_produtos():
+            print(p)
+
+    @staticmethod
+    def inserir_produto():
+        UI.listar_produtos()
+        idProduto = int(input("Insira o id do produto a adicionar: "))
+        quantidade = int(input("Informe a quantidade: "))
+        if ClienteView.inserir_produto_carrinho(idProduto, quantidade):
+            print("Produto adicionado ao carrinho!")
+        else:
+            print("Produto não encontrado!")
+
+    @staticmethod
+    def visualizar_carrinho():
+        print("Itens do Carrinho")
+        itens = ClienteView.visualizar_carrinho()
+        if len(itens) == 0:
+            print("Carrinho vazio!")
+        else:
+            for item in itens:
+                print(item)
+
+    @staticmethod
+    def comprar_carrinho():
+        if ClienteView.comprar_carrinho():
+            print("Compra realizada com sucesso!")
+        else:
+            print("Carrinho vazio!")
+
+    @staticmethod
+    def listar_compras():
+        print("Histórico de Compras")
+        compras = ClienteView.listar_compras()
+        if len(compras) == 0:
+            print("Nenhuma compra realizada!")
+        else:
+            for compra in compras:
+                print(compra)
+
+#FUNÇÃO ADICIONAL
+    @staticmethod
+    def limpar_carrinho():
+        ClienteView.limpar_carrinho()
+        print("Carrinho limpo!")
 
 
 UI.home()

@@ -41,7 +41,7 @@ class ProdutoDAO:
         if x != None:
             self.objetos.remove(x)
             self.objetos.append(obj)
-            self.salvar()
+            self.salvar() 
 
     def excluir(self, obj: Produto) -> None:
         x = self.listar_id(obj.id)

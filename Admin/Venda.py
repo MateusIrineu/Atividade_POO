@@ -27,11 +27,11 @@ class VendaDAO:
         VendaDAO.objetos.append(obj)
         VendaDAO.salvar()
 
-    @staticmethod
-    def listar() -> list[Venda]:
-        VendaDAO.abrir()
-        VendaDAO.objetos.sort(key = lambda x : x.id)
-        return VendaDAO.objetos
+    # @staticmethod
+    # def listar() -> list[Venda]:
+    #     VendaDAO.abrir()
+    #     VendaDAO.objetos.sort(key = lambda x : x.id)
+    #     return VendaDAO.objetos
     
     @staticmethod
     def listar_id(id: int) -> Venda | None:
