@@ -8,29 +8,27 @@ class View:
         return ProdutoDAO().listar()
     
     @staticmethod
-    def inserir_produto_carrinho(idProduto, quantidade):
+    def inserir_produto_carrinho(idCliente, idProduto, quantidade):
         produto = ProdutoDAO().listar_id(idProduto)
 
         if produto is None:
             return False
         
-        carrinho_item = Carrinho(id = 0, idProduto = idProduto, descricao = produto.descricao, quantidade = quantidade)
-
-        CarrinhoDAO().inserir_produto_carrinho(carrinho_item)
+        CarrinhoDAO.inserir_produto_carrinho(idCliente, idProduto, produto.descricao, quantidade, produto.preco)
         return True
     
     @staticmethod
-    def visualizar_carrinho():
-        return CarrinhoDAO().visualizar_carrinho()
+    def visualizar_carrinho(idCliente):
+        return CarrinhoDAO.visualizar_carrinho(idCliente)
     
     @staticmethod
-    def comprar_carrinho():
-        return CarrinhoDAO().comprar_carrinho()
+    def comprar_carrinho(idCliente):
+        return CarrinhoDAO.comprar_carrinho(idCliente)
     
     @staticmethod
-    def listar_compras():
-        return CarrinhoDAO().listar_compras()
+    def listar_compras(idCliente):
+        return CarrinhoDAO.listar_compras(idCliente)
     
     @staticmethod
-    def limpar_carrinho():
-        return CarrinhoDAO().limpar_carrinho()
+    def limpar_carrinho(idCliente):
+        return CarrinhoDAO.limpar_carrinho(idCliente)

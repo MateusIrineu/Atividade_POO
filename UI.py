@@ -3,6 +3,7 @@
 # from Produto import Produto, ProdutoDAO
 from Admin.View import View as AdminView
 from Visitante.View import View as LoginView
+from Visitante.Login import LoginDAO
 from Cliente.View import View as ClienteView
 
 class UI:
@@ -68,7 +69,8 @@ class UI:
             if op == 10: UI.produto_listar()
             if op == 11: UI.produto_atualizar()
             if op == 12: UI.produto_excluir()
-            if op == 13: UI.validacao()
+            if op == 13: UI.produto_alterar_preco_geral()
+            if op == 14: UI.validacao()
 
     #TELA DE ACESSO DO CLIENTE
     @staticmethod
@@ -95,9 +97,9 @@ class UI:
         print("5 - Inserir 6 - Listar 7 - Atualizar 8 - Excluir")
         print("----------------------------------------")
         print("----- Produtos -----")
-        print("9 - Inserir 10 - Listar 11 - Atualizar 12 - Excluir")
+        print("9 - Inserir 10 - Listar 11 - Atualizar 12 - Excluir 13 - Alterar Preço Geral")
         print("----------------------------------------")
-        print("13 - Sair do sistema")
+        print("14 - Sair do sistema")
         #UI.validacao()
         return int(input("Informe uma opção: "))
     
@@ -212,6 +214,12 @@ class UI:
         # p = Produto(id, "", 0.0, 0, 0)
         AdminView.produto_excluir(id)
 
+    @staticmethod
+    def produto_alterar_preco_geral():
+        percentual = float(input("Insira o percentual de alteracao (ex: 10 para +10%, -5 para -5%): "))
+        AdminView.produto_alterar_preco_geral(percentual)
+        print("Precos alterados com sucesso!")
+
 # CLIENTE (CARRINHO E COMPRAS)
     @staticmethod
     def listar_produtos():
@@ -224,7 +232,7 @@ class UI:
         UI.listar_produtos()
         idProduto = int(input("Insira o id do produto a adicionar: "))
         quantidade = int(input("Informe a quantidade: "))
-        if ClienteView.inserir_produto_carrinho(idProduto, quantidade):
+        if ClienteView.inserir_produto_carrinho(LoginDAO.idCliente_logado, idProduto, quantidade):
             print("Produto adicionado ao carrinho!")
         else:
             print("Produto não encontrado!")
@@ -232,7 +240,7 @@ class UI:
     @staticmethod
     def visualizar_carrinho():
         print("Itens do Carrinho")
-        itens = ClienteView.visualizar_carrinho()
+        itens = ClienteView.visualizar_carrinho(LoginDAO.idCliente_logado)
         if len(itens) == 0:
             print("Carrinho vazio!")
         else:
@@ -241,7 +249,7 @@ class UI:
 
     @staticmethod
     def comprar_carrinho():
-        if ClienteView.comprar_carrinho():
+        if ClienteView.comprar_carrinho(LoginDAO.idCliente_logado):
             print("Compra realizada com sucesso!")
         else:
             print("Carrinho vazio!")
@@ -249,7 +257,7 @@ class UI:
     @staticmethod
     def listar_compras():
         print("Histórico de Compras")
-        compras = ClienteView.listar_compras()
+        compras = ClienteView.listar_compras(LoginDAO.idCliente_logado)
         if len(compras) == 0:
             print("Nenhuma compra realizada!")
         else:
@@ -259,7 +267,7 @@ class UI:
 #FUNÇÃO ADICIONAL
     @staticmethod
     def limpar_carrinho():
-        ClienteView.limpar_carrinho()
+        ClienteView.limpar_carrinho(LoginDAO.idCliente_logado)
         print("Carrinho limpo!")
 
 

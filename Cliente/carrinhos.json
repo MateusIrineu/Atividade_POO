@@ -1,1 +1,17 @@
-{"objetos": [], "produtos_comprados": [{"id": 1, "idProduto": 1, "descricao": "feja", "quantidade": 2}]}
+{
+    "carrinhos": {
+        "2": {
+            "id": 1,
+            "idCliente": 2,
+            "itens": []
+        }
+    },
+    "produtos_comprados": [
+        {
+            "id": 1,
+            "idProduto": 1,
+            "descricao": "feja",
+            "quantidade": 2
+        }
+    ]
+}

@@ -64,6 +64,10 @@ class View:
         p = Produto(id, "", 0.0, 0, 0)
         ProdutoDAO().excluir(p)
 
+    @staticmethod
+    def produto_alterar_preco_geral(percentual):
+        ProdutoDAO().alterar_preco_geral(percentual)
+
     #VENDA
     @staticmethod
     def listar_vendas():

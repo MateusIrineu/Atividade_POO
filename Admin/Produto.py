@@ -8,7 +8,7 @@ class Produto:
         self.estoque = estoque
         self.idCategoria = idCategoria
     def __str__(self) -> str:
-        return f"{self.id} - {self.descricao} - {self.preco} - {self.estoque} - {self.idCategoria}"
+        return f" #{self.id} - Nome: {self.descricao} - Preço: {self.preco} - Estoque: {self.estoque} - id da Categoria: #{self.idCategoria}"
     
 class ProdutoDAO:
     def __init__(self):
@@ -49,14 +49,25 @@ class ProdutoDAO:
             self.objetos.remove(x)
             self.salvar()
 
+    def alterar_preco_geral(self, percentual: float) -> None:
+        """Altera o preço de todos os produtos por um percentual
+        
+        Args:
+            percentual: Percentual de alteração (ex: 10 para +10%, -5 para -5%)
+        """
+        self.abrir()
+        for produto in self.objetos:
+            produto.preco = round(produto.preco * (1 + percentual / 100), 2)
+        self.salvar()
+
     def salvar(self) -> None:
-        with open("produtos.json", mode = "w") as arquivo:
+        with open("Admin/produtos.json", mode = "w") as arquivo:
             json.dump(self.objetos, arquivo, default = vars)
 
     def abrir(self) -> None:
         self.objetos = []
         try:
-            with open("produtos.json", mode = "r") as arquivo:
+            with open("Admin/produtos.json", mode = "r") as arquivo:
                 objetos_json = json.load(arquivo)
                 for obj in objetos_json:
                     p = Produto(obj["id"], obj["descricao"], obj["preco"], obj["estoque"], obj["idCategoria"])
