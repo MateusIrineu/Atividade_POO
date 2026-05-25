@@ -25,16 +25,17 @@ class Carrinho:
     
 class CarrinhoDAO:
     carrinhos = {}
-    produtos_comprados = []
+    proximoIdCarrinho = 1
 
     @staticmethod
     def obter_ou_criar_carrinho(idCliente):
         """Obtém o carrinho do cliente ou cria um novo se não existir"""
-        if idCliente not in CarrinhoDAO.carrinhos:
+        idCliente_str = str(idCliente)
+        if idCliente_str not in CarrinhoDAO.carrinhos:
             # Cria novo carrinho para o cliente
-            novo_id = max([int(k) for k in CarrinhoDAO.carrinhos.keys()], default=0) + 1
-            CarrinhoDAO.carrinhos[str(idCliente)] = Carrinho(novo_id, idCliente)
-        return CarrinhoDAO.carrinhos[str(idCliente)]
+            CarrinhoDAO.carrinhos[idCliente_str] = Carrinho(CarrinhoDAO.proximoIdCarrinho, idCliente)
+            CarrinhoDAO.proximoIdCarrinho += 1
+        return CarrinhoDAO.carrinhos[idCliente_str]
 
     @staticmethod
     def inserir_produto_carrinho(idCliente, idProduto, descricao, quantidade, preco):
@@ -49,10 +50,11 @@ class CarrinhoDAO:
     def comprar_carrinho(idCliente):
         CarrinhoDAO.abrir()
         
-        if str(idCliente) not in CarrinhoDAO.carrinhos:
+        idCliente_str = str(idCliente)
+        if idCliente_str not in CarrinhoDAO.carrinhos:
             return False
         
-        carrinho = CarrinhoDAO.carrinhos[str(idCliente)]
+        carrinho = CarrinhoDAO.carrinhos[idCliente_str]
         if len(carrinho.itens) == 0:
             return False
         
@@ -64,6 +66,11 @@ class CarrinhoDAO:
         # Cria Venda
         venda = Venda(0, datetime.now(), False, total, idCliente)
         VendaDAO.inserir(venda)
+        
+        # Verifica se a venda foi inserida com sucesso
+        if venda.id == 0:
+            return False
+        
         venda_id = venda.id
         
         # Cria VendaItem para cada item do carrinho
@@ -79,21 +86,24 @@ class CarrinhoDAO:
     @staticmethod
     def limpar_carrinho(idCliente):
         CarrinhoDAO.abrir()
-        if str(idCliente) in CarrinhoDAO.carrinhos:
-            CarrinhoDAO.carrinhos[str(idCliente)].itens = []
+        idCliente_str = str(idCliente)
+        if idCliente_str in CarrinhoDAO.carrinhos:
+            CarrinhoDAO.carrinhos[idCliente_str].itens = []
             CarrinhoDAO.salvar()
 
     @staticmethod
     def visualizar_carrinho(idCliente):
         CarrinhoDAO.abrir()
-        if str(idCliente) not in CarrinhoDAO.carrinhos:
+        idCliente_str = str(idCliente)
+        if idCliente_str not in CarrinhoDAO.carrinhos:
             return []
-        return CarrinhoDAO.carrinhos[str(idCliente)].itens
+        return CarrinhoDAO.carrinhos[idCliente_str].itens
     
     @staticmethod
     def listar_compras(idCliente):
-        CarrinhoDAO.abrir()
-        compras_cliente = [obj for obj in CarrinhoDAO.produtos_comprados if obj.get("idCliente") == idCliente]
+        """Lista apenas as compras do cliente específico (segurança de dados)"""
+        VendaDAO.abrir()
+        compras_cliente = [venda for venda in VendaDAO.objetos if venda.idCliente == idCliente]
         return compras_cliente
 
     @staticmethod
@@ -107,21 +117,23 @@ class CarrinhoDAO:
             }
         
         with open("Cliente/carrinhos.json", mode="w") as arquivo:
-            json.dump({
-                "carrinhos": carrinhos_dict,
-                "produtos_comprados": CarrinhoDAO.produtos_comprados
-            }, arquivo, indent=4)
+            json.dump(carrinhos_dict, arquivo, indent=4)
                            
     @staticmethod
     def abrir():
         CarrinhoDAO.carrinhos = {}
-        CarrinhoDAO.produtos_comprados = []
         try:
             with open("Cliente/carrinhos.json", mode="r") as arquivo:
                 dados = json.load(arquivo)
                 
+                # Suporta estrutura antiga e nova
+                if "carrinhos" in dados:
+                    carrinhos_data = dados.get("carrinhos", {})
+                else:
+                    carrinhos_data = dados
+                
                 # Carrega carrinhos
-                for chave, carrinho_data in dados.get("carrinhos", {}).items():
+                for chave, carrinho_data in carrinhos_data.items():
                     carrinho = Carrinho(carrinho_data["id"], carrinho_data["idCliente"])
                     for item_data in carrinho_data.get("itens", []):
                         item = CarrinhoItem(
@@ -132,8 +144,9 @@ class CarrinhoDAO:
                         )
                         carrinho.itens.append(item)
                     CarrinhoDAO.carrinhos[chave] = carrinho
-                
-                # Carrega histórico de compras
-                CarrinhoDAO.produtos_comprados = dados.get("produtos_comprados", [])
+                    
+                    # Atualiza proximoIdCarrinho para não gerar IDs duplicados
+                    if carrinho.id >= CarrinhoDAO.proximoIdCarrinho:
+                        CarrinhoDAO.proximoIdCarrinho = carrinho.id + 1
         except FileNotFoundError:
             pass

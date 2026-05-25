@@ -10,7 +10,8 @@ class Venda:
         self.idCliente = idCliente
     
     def __str__(self) -> str:
-        return f"{self.id} - {self.data} - {self.carrinho} - {self.total} - {self.idCliente}"
+        data_formatada = self.data.strftime("%d/%m/%Y - Horário: %H:%M:%S")
+        return f"ID Compra: #{self.id} - Data: {data_formatada} - Total: R$ {self.total} - Cliente: #{self.idCliente}"
     
 class VendaDAO:
     objetos: list[Venda] = []
