@@ -43,7 +43,7 @@ class AdminUI:
         from UI import UI
         UI.validacao()
 
-    #MENU ADMIN
+    #MENU ADMINs
     @staticmethod
     def menu():
         print("----- Clientes -----")
