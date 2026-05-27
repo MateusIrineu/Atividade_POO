@@ -1,10 +1,25 @@
 from Admin.View import View as AdminView
-
+import streamlit as st
+from streamlit_option_menu import option_menu
 
 class AdminUI:
     #TELA DE ACESSO DO ADMIN
     @staticmethod
     def main():
+
+        email_admin = st.session_state.email_logado
+
+        with st.sidebar:
+            st.info(f"Bem vindo, {st.session_state.email_logado}")
+
+
+            aba_selecionada = option_menu(
+                menu_title = "Painel Admin",
+                options = ["Clientes", "Categorias", "Produtos"],
+                icons = ["people", "tags", "box-seam" ],
+                default_index = 0
+        )
+
         op = 0
         while True:
             op = AdminUI.menu()
@@ -47,27 +62,26 @@ class AdminUI:
     @staticmethod
     def cliente_inserir():
         print("Cadastro de Clientes")
-        nome = input("Informe o nome: ")
-        email = input("Informe o e-mail: ")
-        senha = input("Informe a senha: ")
-        fone = input("Informe o fone: ")
-        # c = View(0, nome, email, fone)
+        nome: str = st.text_input("Informe o nome: ")
+        email: str = st.text_input("Informe o e-mail: ")
+        senha: str = st.text_input("Informe a senha: ")
+        fone: str = st.text_input("Informe o fone: ")
         AdminView.cliente_inserir(nome, email, senha, fone)
 
     @staticmethod
     def cliente_listar():
-        print("Listagem de Clientes")
+        st.text("Listagem de Clientes")
         for c in AdminView.cliente_listar():
-            print(c)
+            st.text(c)
 
     @staticmethod
     def cliente_atualizar():
         AdminUI.cliente_listar()
         id = int(input("Qual o id do cliente a ser atualizado: "))
-        nome = input("Informe o novo nome: ")
-        email = input("Informe o novo e-mail: ")
-        senha = input("Informe a nova senha: ")
-        fone = input("Informe o novo fone: ")
+        nome: str = st.text_input("Informe o novo nome: ")
+        email: str = st.text_input("Informe o novo e-mail: ")
+        senha: str = st.text_input("Informe a nova senha: ")
+        fone: str = st.text_input("Informe o novo fone: ")
         # c = Cliente(id, nome, email, fone)
         AdminView.cliente_atualizar(id, nome, email, senha, fone)
 

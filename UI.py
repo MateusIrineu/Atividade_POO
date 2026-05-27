@@ -22,6 +22,8 @@ class UI:
                 UI.criar_usuario()
             elif resposta == "Fazer login":
                 UI.validacao()
+            
+
 
     
     #CRIANDO USUARIO
@@ -56,11 +58,13 @@ class UI:
             if (email == "admin@gmail.com") and (senha == "1234"):
                 st.success("Admin logado com sucesso!")
                 st.session_state.usuario_logado = True #estado atualizado
+                st.session_state.email_logado = email
                 AdminUI.main()
 
             elif LoginView.login(email, senha): #retorna o bool da função para cliente
                 st.success("Login realizado com sucesso!")
                 st.session_state.usuario_logado = True
+                st.session_state.email_logado = email
                 ClienteUI.cliente_main()
 
             else:
