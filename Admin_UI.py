@@ -18,55 +18,89 @@ class AdminUI:
                 options = ["Clientes", "Categorias", "Produtos"],
                 icons = ["people", "tags", "box-seam" ],
                 default_index = 0
-        )
+            )
+            button_sair: bool = st.button("Sair", type="primary")
+            if button_sair:
+                AdminUI.sair()
 
-        op = 0
-        while True:
-            op = AdminUI.menu()
-            if op == 1: AdminUI.cliente_inserir()
-            if op == 2: AdminUI.cliente_listar()
-            if op == 3: AdminUI.cliente_atualizar()
-            if op == 4: AdminUI.cliente_excluir()
-            if op == 5: AdminUI.categoria_inserir()
-            if op == 6: AdminUI.categoria_listar()
-            if op == 7: AdminUI.categoria_atualizar()
-            if op == 8: AdminUI.categoria_excluir()
-            if op == 9: AdminUI.produto_inserir()
-            if op == 10: AdminUI.produto_listar()
-            if op == 11: AdminUI.produto_atualizar()
-            if op == 12: AdminUI.produto_excluir()
-            if op == 13: AdminUI.produto_alterar_preco_geral()
-            if op == 14: AdminUI.sair()
+        if aba_selecionada == "Clientes":
+            st.header("Gerenciamento de Clientes", divider="blue")
+            resposta: str = st.radio("Escolha a opção:", ["Inserir cliente", "Listar clientes", "Atualizar cliente", "Excluir cliente"])
+
+            if resposta == "Inserir cliente":
+                AdminUI.cliente_inserir()
+            elif resposta == "Listar clientes":
+                AdminUI.cliente_listar()
+            elif resposta == "Atualizar cliente":
+                AdminUI.cliente_atualizar()
+            elif resposta == "Excluir cliente":
+                AdminUI.cliente_excluir()
+
+        if aba_selecionada == "Categorias":
+            st.header("Gerenciamento de Categorias", divider="red")
+            resposta: str = st.radio("Escolha a opção:", ["Inserir categoria", "Listar categorias", "Atualizar categoiria", "Excluir categoria"])
+
+            if resposta == "Inserir categoria":
+                AdminUI.categoria_inserir()
+            elif resposta == "Listar categorias":
+                AdminUI.categoria_listar()
+            elif resposta == "Atualizar categoiria":
+                AdminUI.categoria_atualizar()
+            elif resposta == "Excluir categoria":
+                AdminUI.categoria_excluir()
+
+        if aba_selecionada == "Produtos":
+            st.header("Gerenciamento de Produtos", divider="green")
+            resposta: str = st.radio("Escolha a opção:", ["Inserir produto", "Listar produtos", "Atualizar produto", "Excluir produto", "Alterar preço"])
+
+            if resposta == "Inserir produto":
+                AdminUI.produto_inserir()
+            elif resposta == "Listar produtos":
+                AdminUI.produto_listar()
+            elif resposta == "Atualizar produto":
+                AdminUI.produto_atualizar()
+            elif resposta == "Excluir produto":
+                AdminUI.produto_excluir()
+            elif resposta == "Alterar preço":
+                AdminUI.produto_alterar_preco_geral()
 
     @staticmethod
     def sair():
         from UI import UI
-        UI.validacao()
+        st.session_state.usuario_logado = False
+        st.session_state.email_logado = None
+        st.rerun()
 
     #MENU ADMIN
-    @staticmethod
-    def menu():
-        print("----- Clientes -----")
-        print("1 - Inserir 2 - Listar 3 - Atualizar 4 - Excluir")
-        print("----------------------------------------")
-        print("----- Categorias -----")
-        print("5 - Inserir 6 - Listar 7 - Atualizar 8 - Excluir")
-        print("----------------------------------------")
-        print("----- Produtos -----")
-        print("9 - Inserir 10 - Listar 11 - Atualizar 12 - Excluir 13 - Alterar Preço Geral")
-        print("----------------------------------------")
-        print("14 - Sair do sistema")
-        return int(input("Informe uma opção: "))
+    # @staticmethod
+    # def menu():
+    #     print("----- Clientes -----")
+    #     print("1 - Inserir 2 - Listar 3 - Atualizar 4 - Excluir")
+    #     print("----------------------------------------")
+    #     print("----- Categorias -----")
+    #     print("5 - Inserir 6 - Listar 7 - Atualizar 8 - Excluir")
+    #     print("----------------------------------------")
+    #     print("----- Produtos -----")
+    #     print("9 - Inserir 10 - Listar 11 - Atualizar 12 - Excluir 13 - Alterar Preço Geral")
+    #     print("----------------------------------------")
+    #     print("14 - Sair do sistema")
+    #     return int(input("Informe uma opção: "))
 
 #CLIENTE POR ADMIN
     @staticmethod
     def cliente_inserir():
         print("Cadastro de Clientes")
-        nome: str = st.text_input("Informe o nome: ")
-        email: str = st.text_input("Informe o e-mail: ")
-        senha: str = st.text_input("Informe a senha: ")
-        fone: str = st.text_input("Informe o fone: ")
-        AdminView.cliente_inserir(nome, email, senha, fone)
+        with st.form("form_inserir_cliente"):
+            nome: str = st.text_input("Informe o nome: ")
+            email: str = st.text_input("Informe o e-mail: ")
+            senha: str = st.text_input("Informe a senha: ")
+            fone: str = st.text_input("Informe o fone: ")
+
+            submit: bool = st.form_submit_button("Inserir Cliente", type="secondary")
+    
+        if submit:
+            AdminView.cliente_inserir(nome, email, senha, fone)
+            st.success("Cliente inserido com sucesso!")
 
     @staticmethod
     def cliente_listar():
@@ -77,20 +111,29 @@ class AdminUI:
     @staticmethod
     def cliente_atualizar():
         AdminUI.cliente_listar()
-        id = int(input("Qual o id do cliente a ser atualizado: "))
-        nome: str = st.text_input("Informe o novo nome: ")
-        email: str = st.text_input("Informe o novo e-mail: ")
-        senha: str = st.text_input("Informe a nova senha: ")
-        fone: str = st.text_input("Informe o novo fone: ")
-        # c = Cliente(id, nome, email, fone)
-        AdminView.cliente_atualizar(id, nome, email, senha, fone)
+        with st.form("form_atualizar_cliente"):
+            id: int = int(st.text_input("Qual o id do cliente a ser atualizado: ", value=1, key="upd_id"))
+            nome: str = st.text_input("Informe o novo nome: ", key="upd_nome")
+            email: str = st.text_input("Informe o novo e-mail: ", key="upd_email")
+            senha: str = st.text_input("Informe a nova senha: ", key="upd_senha")
+            fone: str = st.text_input("Informe o novo fone: ", key="upd_fone")
+            submit: bool = st.form_submit_button("Atualizar Cliente", type="secondary")
+
+        if submit:
+            AdminView.cliente_atualizar(id, nome, email, senha, fone)
+            st.success("Cliente atualizado com sucesso!")
+            st.rerun()
 
     @staticmethod
     def cliente_excluir():
         AdminUI.cliente_listar()
-        id = int(input("Qual o id do cliente a ser excluído: "))
-        # c = Cliente(id, "", "", "")
-        AdminView.cliente_excluir(id)
+        with st.form("form_excluir_cliente"):
+            id: int = int(st.text_input("Qual o id do cliente a ser excluído: ", value=1))
+            submit: bool = st.form_submit_button("Excluir cliente", type="secondary")
+
+        if submit:
+            AdminView.cliente_excluir(id)
+            st.success("Cliente excluído com sucesso.")
 
 #CATEGORIA POR ADMIN
     @staticmethod
