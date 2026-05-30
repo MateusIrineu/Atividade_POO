@@ -8,7 +8,7 @@ import time
 class UI:
     #CRIAÇÃO DE CONTA OU LOGIN
     @staticmethod
-    def home():
+    def home() -> None:
 
         if "usuario_logado" not in st.session_state:
             st.session_state.usuario_logado = False
