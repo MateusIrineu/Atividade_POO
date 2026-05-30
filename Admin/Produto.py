@@ -8,7 +8,7 @@ class Produto:
         self.estoque = estoque
         self.idCategoria = idCategoria
     def __str__(self) -> str:
-        return f" #{self.id} - Nome: {self.descricao} - Preço: {self.preco} - Estoque: {self.estoque} - id da Categoria: #{self.idCategoria}"
+        return f" #{self.id} - Nome: {self.descricao} - Preço: R$ {self.preco} - Estoque: {self.estoque} - id da Categoria: #{self.idCategoria}"
     
 class ProdutoDAO:
     def __init__(self):
@@ -50,11 +50,7 @@ class ProdutoDAO:
             self.salvar()
 
     def alterar_preco_geral(self, percentual: float) -> None:
-        """Altera o preço de todos os produtos por um percentual
-        
-        Args:
-            percentual: Percentual de alteração (ex: 10 para +10%, -5 para -5%)
-        """
+
         self.abrir()
         for produto in self.objetos:
             produto.preco = round(produto.preco * (1 + percentual / 100), 2)

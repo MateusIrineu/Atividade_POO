@@ -3,6 +3,7 @@ from Visitante.View import View as LoginView
 from Admin_UI import AdminUI
 from Admin.View import View as AdminView
 from Cliente_UI import ClienteUI
+import time
 
 class UI:
     #CRIAÇÃO DE CONTA OU LOGIN
@@ -48,7 +49,8 @@ class UI:
         if submit:
             AdminView.cliente_inserir(nome, email, senha, fone)
             st.success("Conta criada com sucesso! Faça login agora.")
-            UI.home()
+            time.sleep(2)
+            st.rerun()
 
     #VALIDAÇÃO DE USUÁRIO
     @staticmethod
