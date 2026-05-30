@@ -6,7 +6,7 @@ import time
 class AdminUI:
     #TELA DE ACESSO DO ADMIN
     @staticmethod
-    def main():
+    def main() -> None:
 
         email_admin = st.session_state.email_logado
 
@@ -67,14 +67,14 @@ class AdminUI:
                 AdminUI.produto_alterar_preco_geral()
 
     @staticmethod
-    def sair():
+    def sair() -> None:
         st.session_state.usuario_logado = False
         st.session_state.email_logado = None
         st.rerun()
 
 #CLIENTE POR ADMIN
     @staticmethod
-    def cliente_inserir():
+    def cliente_inserir() -> None:
         with st.form("form_inserir_cliente"):
             st.subheader("Cadastro de Clientes")
             nome: str = st.text_input("Informe o nome: ")
@@ -91,14 +91,14 @@ class AdminUI:
             st.rerun()
 
     @staticmethod
-    def cliente_listar():
+    def cliente_listar() -> None:
         with st.container(border=True):
             st.subheader("Listagem de Clientes")
             for c in AdminView.cliente_listar():
                 st.text(c)
 
     @staticmethod
-    def cliente_atualizar():
+    def cliente_atualizar() -> None:
         with st.form("form_atualizar_cliente"):
             AdminUI.cliente_listar()
             st.subheader("Atualização de Cliente")
@@ -117,7 +117,7 @@ class AdminUI:
             st.rerun()
 
     @staticmethod
-    def cliente_excluir():
+    def cliente_excluir() -> None:
         with st.form("form_excluir_cliente"):
             AdminUI.cliente_listar()
             st.subheader("Exclusão de Cliente")
@@ -133,7 +133,7 @@ class AdminUI:
 
 #CATEGORIA POR ADMIN
     @staticmethod
-    def categoria_inserir():
+    def categoria_inserir() -> None:
         with st.form("form_inserir_categoria"):
             st.subheader("Cadastro de Categorias")
             desc: str = st.text_input("Informe a descrição: ")
@@ -147,14 +147,14 @@ class AdminUI:
             st.rerun()
 
     @staticmethod
-    def categoria_listar():
+    def categoria_listar() -> None:
        with st.container(border=True):
             st.subheader("Listagem de Categorias")
             for c in AdminView.categoria_listar():
                 st.text(c)
 
     @staticmethod
-    def categoria_atualizar():
+    def categoria_atualizar() -> None:
         with st.form("form_atualizar_categoria"):
             AdminUI.categoria_listar()
             st.subheader("Atualização de Cliente")
@@ -173,7 +173,7 @@ class AdminUI:
             
 
     @staticmethod
-    def categoria_excluir():
+    def categoria_excluir() -> None:
         with st.form("form_excluir_categoria"):
             AdminUI.categoria_listar()
             st.subheader("Exclusão de Categoria")
@@ -191,7 +191,7 @@ class AdminUI:
 
 # PRODUTO POR ADMIN
     @staticmethod
-    def produto_inserir():
+    def produto_inserir() -> None:
         with st.form("form_inserir_produto"):
             st.subheader("Cadastro de Produtos")
             descricao: str = st.text_input("Informe a descrição: ")
@@ -217,14 +217,14 @@ class AdminUI:
             st.rerun()
 
     @staticmethod
-    def produto_listar():
+    def produto_listar() -> None:
         with st.container(border=True):
             st.subheader("Listagem de Produtos")
             for p in AdminView.produto_listar():
                 st.text(p)
 
     @staticmethod
-    def produto_atualizar():
+    def produto_atualizar() -> None:
         with st.form("form_atualizar_produto"):
             AdminUI.produto_listar()
             st.subheader("Atualização de Produto")
@@ -255,7 +255,7 @@ class AdminUI:
             st.rerun()
 
     @staticmethod
-    def produto_excluir():
+    def produto_excluir() -> None:
         with st.form("form_excluir_produto"):
             AdminUI.produto_listar()
             st.subheader("Exclusão de Produto")
@@ -272,7 +272,7 @@ class AdminUI:
             st.rerun()
 
     @staticmethod
-    def produto_alterar_preco_geral():
+    def produto_alterar_preco_geral() -> None:
         with st.form("form_alterar_preco_produtos"):
             AdminUI.produto_listar()
             st.subheader("Alteração de Preços")
