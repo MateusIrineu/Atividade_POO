@@ -1,5 +1,7 @@
 from Admin.Cliente import Cliente, ClienteDAO 
 
+
+
 class Login:
     def __init__(self, email: str, senha: str):
         self.email = email
@@ -11,6 +13,7 @@ class Login:
 class LoginDAO:
     usuario_logado = False
     idCliente_logado = None
+    nome_logado = None
 
     @classmethod
     def logado(cls, email, senha) -> bool:
@@ -21,6 +24,7 @@ class LoginDAO:
             if (cliente.email == email) and (cliente.senha == senha):
                 cls.usuario_logado = True
                 cls.idCliente_logado = cliente.id
+                cls.nome_logado = cliente.nome
                 return True
              
         cls.usuario_logado = False

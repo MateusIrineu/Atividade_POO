@@ -1,9 +1,11 @@
 import streamlit as st
 from Visitante.View import View as LoginView
+from Visitante.Login import LoginDAO
 from Admin_UI import AdminUI
 from Admin.View import View as AdminView
 from Cliente_UI import ClienteInterface
 import time
+
 
 class UI:
     #CRIAÇÃO DE CONTA OU LOGIN
@@ -12,8 +14,14 @@ class UI:
 
         if "usuario_logado" not in st.session_state:
             st.session_state.usuario_logado = False
+        if "email_logado" not in st.session_state:
             st.session_state.email_logado = None
+        if "tipo_usuario" not in st.session_state:
             st.session_state.tipo_usuario = None
+        if "id_cliente_logado" not in st.session_state:
+            st.session_state.id_cliente_logado = None
+        if "nome_cliente_logado" not in st.session_state:
+            st.session_state.nome_cliente_logado = None
 
         if st.session_state.usuario_logado:
             if st.session_state.email_logado == "admin@gmail.com":
@@ -21,14 +29,13 @@ class UI:
             else:
                 ClienteInterface.main()
         else:
-            st.header("Sistema ECommerce - Cantina Santa Clara", divider="blue")
+            st.header("Sistema ECommerce - Cantina Santa Clara", divider="red")
 
             if not st.session_state.usuario_logado:
-                resposta: str = st.radio("Escolha a opção:", ["Criar conta", "Fazer login"])
-                
-                if resposta == "Criar conta":
+                aba1, aba2 = st.tabs(["Criar Conta", "Fazer Login"])
+                with aba1:
                     UI.criar_usuario()
-                elif resposta == "Fazer login":
+                with aba2:
                     UI.validacao()
             
 
@@ -68,12 +75,15 @@ class UI:
                 st.success("Admin logado com sucesso!")
                 st.session_state.usuario_logado = True #estado atualizado
                 st.session_state.email_logado = email
+                st.session_state.nome_cliente_logado = LoginDAO.nome_logado
                 st.rerun()
 
             elif LoginView.login(email, senha): #retorna o bool da função para cliente
                 st.success("Login realizado com sucesso!")
                 st.session_state.usuario_logado = True
                 st.session_state.email_logado = email
+                st.session_state.id_cliente_logado = LoginDAO.idCliente_logado
+                st.session_state.nome_cliente_logado = LoginDAO.nome_logado
                 st.rerun()
 
             else:

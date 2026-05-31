@@ -2,20 +2,23 @@ from Cliente.View import View as ClienteView
 from Visitante.Login import LoginDAO
 import streamlit as st
 from streamlit_option_menu import option_menu
+import time
 
 
 class ClienteInterface:
     @staticmethod
     def main() -> None:
 
-        email_cliente = st.session_state.email_logado
+        st.session_state.email_logado
+        st.session_state.nome_cliente_logado
 
         with st.sidebar:
-            st.info(f"Bem Vindo, {st.session_state.email_logado}")
+            st.info(f"Bem Vindo, {st.session_state.nome_cliente_logado}")
 
             aba_selecionada = option_menu(
                 menu_title = "Painel Cliente",
                 options = ["Ver Produtos", "Meu Carrinho", "Finalizar Compra", "Meus Pedidos"],
+                icons = ["box-seam", "cart", "cash-coin", "receipt"],
                 default_index = 0,
                 key = "cliente_menu"
             )
@@ -38,53 +41,69 @@ class ClienteInterface:
     #Ver Produtos da Loja
     @staticmethod
     def produto_listar()-> None:
+        st.header("Listagem de Produtos", divider="blue")
         with st.container(border=True):
             st.subheader("Produtos Disponiveis")
-            if st.button("Buscar"):
-                for p in ClienteView.listar_produtos():
-                    st.text(p)
+            for p in ClienteView.listar_produtos():
+                st.text(p)
 
     #Ver carrinho e adicionar produto no carrinho
     @staticmethod
     def meu_carrinho()-> None:
-        st.title("Meu Carrinho")
-        aba1, aba2, aba3 = st.tabs(["Ver Carrinho", "Adicionar Produto", "Limpar Carrinho"])
-
+        st.header("Meu Carrinho", divider="red")
+        aba1, aba2 = st.tabs(["Ver Carrinho", "Adicionar Produto"])
+        # aba3 = "Limpar Carrinho"
         with aba1:
-            if st.button("Buscar"):
-                for c in ClienteView.visualizar_carrinho(LoginDAO.idCliente_logado):
+            with st.container(border=True):
+                for c in ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado):
                     st.text(c)
+            if st.button("Limpar Carrinho"):
+                ClienteView.limpar_carrinho(st.session_state.id_cliente_logado)
+                st.success("Carrinho limpo!")
+                time.sleep(2)
+                st.rerun()
 
         with aba2:
             idProduto = st.number_input("Informe o ID do produto: ", min_value=1)
             quantidade = st.number_input("Informe a quantidade: ", min_value=1)
             if st.button("Adicionar ao Carrinho"):
-                if ClienteView.inserir_produto_carrinho(LoginDAO.idCliente_logado, idProduto, quantidade):
+                if ClienteView.inserir_produto_carrinho(st.session_state.id_cliente_logado, idProduto, quantidade):
                     st.success("Produto adicionado ao carrinho!")
+                    time.sleep(2)
+                    st.rerun()
                 else:
                     st.error("Produto não encontrado!")
 
-        with aba3:
-            if st.button("Limpar Carrinho"):
-                ClienteView.limpar_carrinho(LoginDAO.idCliente_logado)
-                st.success("Carrinho limpo!")
+        # with aba3:
+        #     with st.container(border=True):
+        #         for c in ClienteView.visualizar_carrinho(LoginDAO.idCliente_logado):
+        #             st.text(c)
+        #     if st.button("Limpar Carrinho"):
+        #         ClienteView.limpar_carrinho(LoginDAO.idCliente_logado)
+        #         st.success("Carrinho limpo!")
                 
 
     #Finalizar Pedido
     @staticmethod
     def finalizar_compra()-> None:
-        st.title("Finalizar Pedido")
+        st.header("Finalizar Pedido", divider="green")
+        with st.container(border=True):
+            st.subheader("Meu Carrinho")
+            for c in ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado):
+                st.text(c)
         if st.button("Confirmar Compra"):
-            if ClienteView.comprar_carrinho(LoginDAO.idCliente_logado):
+            if ClienteView.comprar_carrinho(st.session_state.id_cliente_logado):
                 st.success("Compra realizada com sucesso!")
+                time.sleep(2)
+                st.rerun()
             else:
                 st.error("Carrinho vazio!")
     
     @staticmethod
     def ver_pedidos()-> None:
-        st.title("Minhas Compras")
-        if st.button("Ver pedidos"):
-            for p in ClienteView.listar_compras(LoginDAO.idCliente_logado):
+        st.header("Minhas Compras", divider="green")
+        with st.container(border=True):
+            for p in ClienteView.listar_compras(st.session_state.id_cliente_logado):
                 st.text(p)
 
     @staticmethod

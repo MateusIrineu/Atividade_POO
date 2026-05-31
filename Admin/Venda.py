@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from Admin.Cliente import Cliente, ClienteDAO
 
 class Venda:
     def __init__(self, id: int, data: datetime, carrinho: bool, total: float, idCliente: int):
@@ -11,7 +12,9 @@ class Venda:
     
     def __str__(self) -> str:
         data_formatada = self.data.strftime("%d/%m/%Y - Horário: %H:%M:%S")
-        return f"ID Compra: #{self.id} - Data: {data_formatada} - Total: R$ {self.total} - Cliente: #{self.idCliente}"
+        cliente = ClienteDAO.listar_id(self.idCliente)
+        nome = cliente.nome if cliente else "Desconhecido"
+        return f"ID Compra: #{self.id} - Data: {data_formatada} - Total: R$ {self.total} - Cliente: {nome}"
     
 class VendaDAO:
     objetos: list[Venda] = []

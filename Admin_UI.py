@@ -8,10 +8,11 @@ class AdminUI:
     @staticmethod
     def main() -> None:
 
-        email_admin = st.session_state.email_logado
+        st.session_state.email_logado
+        st.session_state.nome_cliente_logado
 
         with st.sidebar:
-            st.info(f"Bem vindo, {st.session_state.email_logado}")
+            st.info(f"Bem vindo, Admin")
 
 
             aba_selecionada = option_menu(
@@ -26,44 +27,44 @@ class AdminUI:
                 AdminUI.sair()
 
         if aba_selecionada == "Clientes":
-            st.header("Gerenciamento de Clientes", divider="blue")
-            resposta: str = st.radio("Escolha a opção:", ["Inserir cliente", "Listar clientes", "Atualizar cliente", "Excluir cliente"])
+            st.header("Gerenciamento de Clientes", divider="red")
+            aba1, aba2, aba3, aba4 = st.tabs(["Inserir Cliente", "Listar Clientes", "Atualizar Cliente","Excluir Cliente"])
 
-            if resposta == "Inserir cliente":
+            with aba1:
                 AdminUI.cliente_inserir()
-            elif resposta == "Listar clientes":
+            with aba2:
                 AdminUI.cliente_listar()
-            elif resposta == "Atualizar cliente":
+            with aba3:
                 AdminUI.cliente_atualizar()
-            elif resposta == "Excluir cliente":
+            with aba4:
                 AdminUI.cliente_excluir()
 
         if aba_selecionada == "Categorias":
             st.header("Gerenciamento de Categorias", divider="red")
-            resposta: str = st.radio("Escolha a opção:", ["Inserir categoria", "Listar categorias", "Atualizar categoiria", "Excluir categoria"])
+            aba1, aba2, aba3, aba4 = st.tabs(["Inserir Categoria", "Listar Categorias", "Atualizar Categoiria", "Excluir Categoria"])
 
-            if resposta == "Inserir categoria":
+            with aba1:
                 AdminUI.categoria_inserir()
-            elif resposta == "Listar categorias":
+            with aba2:
                 AdminUI.categoria_listar()
-            elif resposta == "Atualizar categoiria":
+            with aba3:
                 AdminUI.categoria_atualizar()
-            elif resposta == "Excluir categoria":
+            with aba4:
                 AdminUI.categoria_excluir()
 
         if aba_selecionada == "Produtos":
-            st.header("Gerenciamento de Produtos", divider="green")
-            resposta: str = st.radio("Escolha a opção:", ["Inserir produto", "Listar produtos", "Atualizar produto", "Excluir produto", "Alterar preço"])
+            st.header("Gerenciamento de Produtos", divider="red")
+            aba1, aba2, aba3, aba4, aba5 = st.tabs(["Inserir Produto", "Listar Produtos", "Atualizar Produto", "Excluir Produto", "Alterar Preço"])
 
-            if resposta == "Inserir produto":
+            with aba1:
                 AdminUI.produto_inserir()
-            elif resposta == "Listar produtos":
+            with aba2:
                 AdminUI.produto_listar()
-            elif resposta == "Atualizar produto":
+            with aba3:
                 AdminUI.produto_atualizar()
-            elif resposta == "Excluir produto":
+            with aba4:
                 AdminUI.produto_excluir()
-            elif resposta == "Alterar preço":
+            with aba5:
                 AdminUI.produto_alterar_preco_geral()
 
     @staticmethod
