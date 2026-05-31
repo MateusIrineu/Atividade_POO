@@ -2,7 +2,7 @@ import streamlit as st
 from Visitante.View import View as LoginView
 from Admin_UI import AdminUI
 from Admin.View import View as AdminView
-from Cliente_UI import ClienteUI
+from Cliente_UI import ClienteInterface
 import time
 
 class UI:
@@ -19,7 +19,7 @@ class UI:
             if st.session_state.email_logado == "admin@gmail.com":
                 AdminUI.main()
             else:
-                ClienteUI.cliente_main()
+                ClienteInterface.main()
         else:
             st.header("Sistema ECommerce - Cantina Santa Clara", divider="blue")
 
