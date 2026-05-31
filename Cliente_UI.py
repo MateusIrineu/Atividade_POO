@@ -66,10 +66,9 @@ class ClienteInterface:
 
         with aba3:
             if st.button("Limpar Carrinho"):
-                if ClienteView.limpar_carrinho(LoginDAO.idCliente_logado):
-                    st.success("Carrinho limpo!")
-                else:
-                    st.error("Carrinho está vazio!")
+                ClienteView.limpar_carrinho(LoginDAO.idCliente_logado)
+                st.success("Carrinho limpo!")
+                
 
     #Finalizar Pedido
     @staticmethod
