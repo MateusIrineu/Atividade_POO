@@ -10,6 +10,9 @@ class Produto:
     def __str__(self) -> str:
         return f" #{self.id} - Nome: {self.descricao} - Preço: R$ {self.preco} - Estoque: {self.estoque} - id da Categoria: #{self.idCategoria}"
     
+    def to_dict(self):
+        return {"Id":self.id,"Nome": self.descricao, "Preço": self.preco, "Estoque": self.estoque, "idCategoria": self.idCategoria}
+    
 class ProdutoDAO:
     def __init__(self):
         self.objetos: list[Produto] = []
@@ -70,3 +73,5 @@ class ProdutoDAO:
                     self.objetos.append(p)
         except FileNotFoundError:
             self.objetos = []
+
+    
