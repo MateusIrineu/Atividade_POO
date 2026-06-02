@@ -76,20 +76,23 @@ class AdminUI:
 #CLIENTE POR ADMIN
     @staticmethod
     def cliente_inserir() -> None:
-        with st.form("form_inserir_cliente"):
-            st.subheader("Cadastro de Clientes")
-            nome: str = st.text_input("Informe o nome: ")
-            email: str = st.text_input("Informe o e-mail: ")
-            senha: str = st.text_input("Informe a senha: ")
-            fone: str = st.text_input("Informe o fone: ")
+        try:   
+            with st.form("form_inserir_cliente"):
+                st.subheader("Cadastro de Clientes")
+                nome: str = st.text_input("Informe o nome: ")
+                email: str = st.text_input("Informe o e-mail: ")
+                senha: str = st.text_input("Informe a senha: ")
+                fone: str = st.text_input("Informe o fone: ")
 
-            submit: bool = st.form_submit_button("Inserir Cliente", type="secondary")
-    
-        if submit:
-            AdminView.cliente_inserir(nome, email, senha, fone)
-            st.success("Cliente inserido com sucesso!")
-            time.sleep(2)
-            st.rerun()
+                submit: bool = st.form_submit_button("Inserir Cliente", type="secondary")
+        
+            if submit:
+                AdminView.cliente_inserir(nome, email, senha, fone)
+                st.success("Cliente inserido com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def cliente_listar() -> None:
@@ -100,194 +103,230 @@ class AdminUI:
 
     @staticmethod
     def cliente_atualizar() -> None:
-        with st.form("form_atualizar_cliente"):
-            AdminUI.cliente_listar()
-            st.subheader("Atualização de Cliente")
-            id_str: str = st.text_input("Qual o id do cliente a ser atualizado: ", value=1) or ''
-            id: int = int(id_str) if id_str.isdigit() else 0
-            nome: str = st.text_input("Informe o novo nome: ")
-            email: str = st.text_input("Informe o novo e-mail: ")
-            senha: str = st.text_input("Informe a nova senha: ")
-            fone: str = st.text_input("Informe o novo fone: ")
-            submit: bool = st.form_submit_button("Atualizar Cliente", type="secondary")
+        try:
+            with st.form("form_atualizar_cliente"):
+                AdminUI.cliente_listar()
+                st.subheader("Atualização de Cliente")
+                id_str: str = st.text_input("Qual o id do cliente a ser atualizado: ", value=1) or ''
+                id: int = int(id_str) if id_str.isdigit() else 0
+                nome: str = st.text_input("Informe o novo nome: ")
+                email: str = st.text_input("Informe o novo e-mail: ")
+                senha: str = st.text_input("Informe a nova senha: ")
+                fone: str = st.text_input("Informe o novo fone: ")
+                submit: bool = st.form_submit_button("Atualizar Cliente", type="secondary")
 
-        if submit:
-            AdminView.cliente_atualizar(id, nome, email, senha, fone)
-            st.success("Cliente atualizado com sucesso!")
-            time.sleep(2)
-            st.rerun()
+            if submit:
+                AdminView.cliente_atualizar(id, nome, email, senha, fone)
+                st.success("Cliente atualizado com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def cliente_excluir() -> None:
-        with st.form("form_excluir_cliente"):
-            AdminUI.cliente_listar()
-            st.subheader("Exclusão de Cliente")
-            id_str: str = st.text_input("Qual o id do cliente a ser excluído: ", value=1) or ''
-            id: int = int(id_str) if id_str.isdigit() else 0
-            submit: bool = st.form_submit_button("Excluir cliente", type="secondary")         
+        try:
+            with st.form("form_excluir_cliente"):
+                AdminUI.cliente_listar()
+                st.subheader("Exclusão de Cliente")
+                id_str: str = st.text_input("Qual o id do cliente a ser excluído: ", value=1) or ''
+                id: int = int(id_str) if id_str.isdigit() else 0
+                submit: bool = st.form_submit_button("Excluir cliente", type="secondary")         
 
-        if submit:
-            AdminView.cliente_excluir(id)
-            st.success("Cliente excluído com sucesso!")
-            time.sleep(2)
-            st.rerun()
+            if submit:
+                AdminView.cliente_excluir(id)
+                st.success("Cliente excluído com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
 #CATEGORIA POR ADMIN
     @staticmethod
     def categoria_inserir() -> None:
-        with st.form("form_inserir_categoria"):
-            st.subheader("Cadastro de Categorias")
-            desc: str = st.text_input("Informe a descrição: ")
+        try:
+            with st.form("form_inserir_categoria"):
+                st.subheader("Cadastro de Categorias")
+                desc: str = st.text_input("Informe a descrição: ")
 
-            submit: bool = st.form_submit_button("Inserir Categoria", type="secondary")
+                submit: bool = st.form_submit_button("Inserir Categoria", type="secondary")
 
-        if submit:
-            AdminView.categoria_inserir(desc)
-            st.success("Categoria inserida com sucesso!")
-            time.sleep(2)
-            st.rerun()
+            if submit:
+                AdminView.categoria_inserir(desc)
+                st.success("Categoria inserida com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def categoria_listar() -> None:
-       with st.container(border=True):
-            st.subheader("Listagem de Categorias")
-            for c in AdminView.categoria_listar():
-                st.text(c)
+        try:
+            with st.container(border=True):
+                st.subheader("Listagem de Categorias")
+                for c in AdminView.categoria_listar():
+                    st.text(c)
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def categoria_atualizar() -> None:
-        with st.form("form_atualizar_categoria"):
-            AdminUI.categoria_listar()
-            st.subheader("Atualização de Cliente")
+        try:
+            with st.form("form_atualizar_categoria"):
+                AdminUI.categoria_listar()
+                st.subheader("Atualização de Cliente")
 
-            id_str: str = st.text_input("Qual o id da categoria a ser atualizado: ", value=1) or ''
-            id: int = int(id_str) if id_str.isdigit() else 0
+                id_str: str = st.text_input("Qual o id da categoria a ser atualizado: ", value=1) or ''
+                id: int = int(id_str) if id_str.isdigit() else 0
 
-            desc: str = st.text_input("Informe a nova descrição: ")
-            submit: bool = st.form_submit_button("Atualizar categoria", type="secondary")
+                desc: str = st.text_input("Informe a nova descrição: ")
+                submit: bool = st.form_submit_button("Atualizar categoria", type="secondary")
 
-        if submit:
-            AdminView.categoria_atualizar(id, desc)
-            st.success("Categoria atualizada com sucesso!")
-            time.sleep(2)
-            st.rerun()
-            
+            if submit:
+                AdminView.categoria_atualizar(id, desc)
+                st.success("Categoria atualizada com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)        
 
     @staticmethod
     def categoria_excluir() -> None:
-        with st.form("form_excluir_categoria"):
-            AdminUI.categoria_listar()
-            st.subheader("Exclusão de Categoria")
+        try:
+            with st.form("form_excluir_categoria"):
+                AdminUI.categoria_listar()
+                st.subheader("Exclusão de Categoria")
 
-            id_str = st.text_input("Qual o id da categoria a ser excluído: ", value=1) or ''
-            id = int(id_str) if id_str.isdigit() else 0
+                id_str = st.text_input("Qual o id da categoria a ser excluído: ", value=1) or ''
+                id = int(id_str) if id_str.isdigit() else 0
 
-            submit: bool = st.form_submit_button("Excluir categoria", type="secondary")
+                submit: bool = st.form_submit_button("Excluir categoria", type="secondary")
 
-        if submit:
-            AdminView.categoria_excluir(id)
-            st.success("Categoria excluída com sucesso!")
-            time.sleep(2)
-            st.rerun()
+            if submit:
+                AdminView.categoria_excluir(id)
+                st.success("Categoria excluída com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
 # PRODUTO POR ADMIN
     @staticmethod
     def produto_inserir() -> None:
-        with st.form("form_inserir_produto"):
-            st.subheader("Cadastro de Produtos")
-            descricao: str = st.text_input("Informe a descrição: ")
+        try:
+            with st.form("form_inserir_produto"):
+                st.subheader("Cadastro de Produtos")
+                descricao: str = st.text_input("Informe a descrição: ")
 
-            preco_str: str = st.text_input("Informe o preço: ", value=1.0) or ''
-            try:
-                preco: float = float(preco_str.replace(",", "."))
-            except ValueError:
-                preco = 0.0
+                preco_str: str = st.text_input("Informe o preço: ", value=1.0) or ''
+                try:
+                    preco: float = float(preco_str.replace(",", "."))
+                except ValueError:
+                    preco = 0.0
 
-            estoque_str: str = st.text_input("Informe a quantidade em estoque: ", value=1) or ''
-            estoque = int(estoque_str) if estoque_str.isdigit() else 0
+                estoque_str: str = st.text_input("Informe a quantidade em estoque: ", value=1) or ''
+                estoque = int(estoque_str) if estoque_str.isdigit() else 0
 
-            idCategoria_str: str = st.text_input("Insira a categoria do produto: ", value=1) or ''
-            idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
-        
-            submit: bool = st.form_submit_button("Inserir produto", type="secondary")
+                idCategoria_str: str = st.text_input("Insira a categoria do produto: ", value=1) or ''
+                idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
             
-        if submit:
-            AdminView.produto_inserir(descricao, preco, estoque, idCategoria)
-            st.success("Produto inserido com sucesso!")
-            time.sleep(2)
-            st.rerun()
-
+                submit: bool = st.form_submit_button("Inserir produto", type="secondary")
+                
+            if submit:
+                AdminView.produto_inserir(descricao, preco, estoque, idCategoria)
+                st.success("Produto inserido com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
+            
     @staticmethod
     def produto_listar() -> None:
-        with st.container(border=True):
-            st.subheader("Listagem de Produtos")
-            for p in AdminView.produto_listar():
-                st.text(p)
+        try:
+
+            with st.container(border=True):
+                st.subheader("Listagem de Produtos")
+                for p in AdminView.produto_listar():
+                    st.text(p)
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def produto_atualizar() -> None:
-        with st.form("form_atualizar_produto"):
-            AdminUI.produto_listar()
-            st.subheader("Atualização de Produto")
+        try:
+            with st.form("form_atualizar_produto"):
+                AdminUI.produto_listar()
+                st.subheader("Atualização de Produto")
 
-            id_str: str = st.text_input("Insira o id do produto a ser atualizado: ", value=1) or ''
-            id: int = int(id_str) if id_str.isdigit() else 0
+                id_str: str = st.text_input("Insira o id do produto a ser atualizado: ", value=1) or ''
+                id: int = int(id_str) if id_str.isdigit() else 0
 
-            descricao: str = st.text_input("Insira a nova descrição: ")
+                descricao: str = st.text_input("Insira a nova descrição: ")
 
-            preco_str: str = st.text_input("Insira o novo preço: ", value=1.0) or ''
-            try:
-                preco: float = float(preco_str.replace(",", "."))
-            except ValueError:
-                preco = 0.0
+                preco_str: str = st.text_input("Insira o novo preço: ", value=1.0) or ''
+                try:
+                    preco: float = float(preco_str.replace(",", "."))
+                except ValueError:
+                    preco = 0.0
 
-            estoque_str: str = st.text_input("Insira a nova quantidade em estoque: ", value=1) or ''   
-            estoque = int(estoque_str) if estoque_str.isdigit() else 0
+                estoque_str: str = st.text_input("Insira a nova quantidade em estoque: ", value=1) or ''   
+                estoque = int(estoque_str) if estoque_str.isdigit() else 0
 
-            idCategoria_str: str = st.text_input("Insira o id da nova categoria do produto: ", value=1) or ''
-            idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
+                idCategoria_str: str = st.text_input("Insira o id da nova categoria do produto: ", value=1) or ''
+                idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
 
-            submit: bool = st.form_submit_button("Atualizar produto", type="secondary")
+                submit: bool = st.form_submit_button("Atualizar produto", type="secondary")
 
-        if submit:
-            AdminView.produto_atualizar(id, descricao, preco, estoque, idCategoria)
-            st.success("Produto atualizado com sucesso!")
-            time.sleep(2)
-            st.rerun()
+            if submit:
+                AdminView.produto_atualizar(id, descricao, preco, estoque, idCategoria)
+                st.success("Produto atualizado com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
+
 
     @staticmethod
     def produto_excluir() -> None:
-        with st.form("form_excluir_produto"):
-            AdminUI.produto_listar()
-            st.subheader("Exclusão de Produto")
+        try:
 
-            id_str: str = st.text_input("Insira o id do produto a ser excluído: ", value=1) or ''
-            id = int(id_str) if id_str.isdigit else 0
-        
-            submit: bool = st.form_submit_button("Excluir produto", type="secondary")
+            with st.form("form_excluir_produto"):
+                AdminUI.produto_listar()
+                st.subheader("Exclusão de Produto")
 
-        if submit:
-            AdminView.produto_excluir(id)
-            st.success("Produto excluído com sucesso!")
-            time.sleep(2)
-            st.rerun()
+                id_str: str = st.text_input("Insira o id do produto a ser excluído: ", value=1) or ''
+                id = int(id_str) if id_str.isdigit else 0
+            
+                submit: bool = st.form_submit_button("Excluir produto", type="secondary")
+
+            if submit:
+                AdminView.produto_excluir(id)
+                st.success("Produto excluído com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def produto_alterar_preco_geral() -> None:
-        with st.form("form_alterar_preco_produtos"):
-            AdminUI.produto_listar()
-            st.subheader("Alteração de Preços")
+        try:
 
-            percentual_str: str = st.text_input("Insira o percentual de alteracao (ex: 10 para +10%, -5 para -5%): ", value=1.0) or ''
-            try:
-                percentual = float(percentual_str.replace(",", "."))
-            except ValueError:
-                percentual = 0.0
+            with st.form("form_alterar_preco_produtos"):
+                AdminUI.produto_listar()
+                st.subheader("Alteração de Preços")
 
-            submit: bool = st.form_submit_button("Alterar preços", type="secondary")
+                percentual_str: str = st.text_input("Insira o percentual de alteracao (ex: 10 para +10%, -5 para -5%): ", value=1.0) or ''
+                try:
+                    percentual = float(percentual_str.replace(",", "."))
+                except ValueError:
+                    percentual = 0.0
 
-        if submit:
-            AdminView.produto_alterar_preco_geral(percentual)
-            st.success("Precos alterados com sucesso!")
-            time.sleep(2)
-            st.rerun()
+                submit: bool = st.form_submit_button("Alterar preços", type="secondary")
+
+            if submit:
+                AdminView.produto_alterar_preco_geral(percentual)
+                st.success("Precos alterados com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)

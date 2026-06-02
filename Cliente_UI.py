@@ -67,13 +67,17 @@ class ClienteInterface:
             idProduto = st.number_input("Informe o ID do produto: ", min_value=1)
             quantidade = st.number_input("Informe a quantidade: ", min_value=1)
             if st.button("Adicionar ao Carrinho"):
-                if ClienteView.inserir_produto_carrinho(st.session_state.id_cliente_logado, idProduto, quantidade):
-                    st.success("Produto adicionado ao carrinho!")
-                    time.sleep(2)
-                    st.rerun()
-                else:
-                    st.error("Produto não encontrado!")
-
+                try:
+                    if ClienteView.inserir_produto_carrinho(st.session_state.id_cliente_logado, idProduto, quantidade):
+                        st.success("Produto adicionado ao carrinho!")
+                        time.sleep(2)
+                        st.rerun()
+                    else:
+                        st.error("Produto não encontrado!")
+                except ValueError as erro:
+                    print(" ---- Erro ---->", erro)
+                    
+                    
         # with aba3:
         #     with st.container(border=True):
         #         for c in ClienteView.visualizar_carrinho(LoginDAO.idCliente_logado):
@@ -87,24 +91,30 @@ class ClienteInterface:
     @staticmethod
     def finalizar_compra()-> None:
         st.header("Finalizar Pedido", divider="green")
-        with st.container(border=True):
-            st.subheader("Meu Carrinho")
-            for c in ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado):
-                st.text(c)
-        if st.button("Confirmar Compra"):
-            if ClienteView.comprar_carrinho(st.session_state.id_cliente_logado):
-                st.success("Compra realizada com sucesso!")
-                time.sleep(2)
-                st.rerun()
-            else:
-                st.error("Carrinho vazio!")
+        try: 
+            with st.container(border=True):
+                st.subheader("Meu Carrinho")
+                for c in ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado):
+                    st.text(c)
+            if st.button("Confirmar Compra"):
+                if ClienteView.comprar_carrinho(st.session_state.id_cliente_logado):
+                    st.success("Compra realizada com sucesso!")
+                    time.sleep(2)
+                    st.rerun()
+                else:
+                    st.error("Carrinho vazio!")
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
     
     @staticmethod
     def ver_pedidos()-> None:
         st.header("Minhas Compras", divider="green")
-        with st.container(border=True):
-            for p in ClienteView.listar_compras(st.session_state.id_cliente_logado):
-                st.text(p)
+        try:   
+            with st.container(border=True):
+                for p in ClienteView.listar_compras(st.session_state.id_cliente_logado):
+                    st.text(p)
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
 
     @staticmethod
     def sair() -> None:
