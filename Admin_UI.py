@@ -295,7 +295,7 @@ class AdminUI:
                             "Preço": st.column_config.Column(alignment="left"),
                             "Estoque": st.column_config.Column(alignment="left"),
                             "idCategoria": st.column_config.Column(alignment="left"),
-                            "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto")
+                            "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto", width="small")
                     })
                 st.subheader("Atualização de Produto")
 
