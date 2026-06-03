@@ -1,4 +1,5 @@
 import json
+from Admin.Crud import CRUD
 
 class VendaItem:
 	def __init__(self, id: int, qtd: int, preco: float, idVenda: int, idProduto: int):
@@ -11,62 +12,23 @@ class VendaItem:
 	def __str__(self) -> str:
 		return f"{self.id} - {self.qtd} - {self.preco} - {self.idVenda} - {self.idProduto}"
 
-class VendaItemDAO:
+class VendaItemDAO(CRUD):
 	objetos: list[VendaItem] = []
 
-	@staticmethod
-	def inserir(obj: VendaItem) -> None:
-		VendaItemDAO.abrir()
-		if len(VendaItemDAO.objetos) == 0:
-			id = 1
-		else:
-			id = (max(VendaItemDAO.objetos, key = lambda x : x.id)).id + 1
-		obj.id = id
-		VendaItemDAO.objetos.append(obj)
-		VendaItemDAO.salvar()
 
-	@staticmethod
-	def listar() -> list[VendaItem]:
-		VendaItemDAO.abrir()
-		VendaItemDAO.objetos.sort(key = lambda x : x.id)
-		return VendaItemDAO.objetos
-
-	@staticmethod
-	def listar_id(id: int) -> VendaItem | None:
-		VendaItemDAO.abrir()
-		for obj in VendaItemDAO.objetos:
-			if obj.id == id:
-				return obj
-		return None
-
-	@staticmethod
-	def atualizar(obj: VendaItem) -> None:
-		x = VendaItemDAO.listar_id(obj.id)
-		if x != None:
-			VendaItemDAO.objetos.remove(x)
-			VendaItemDAO.objetos.append(obj)
-			VendaItemDAO.salvar()
-
-	@staticmethod
-	def excluir(obj: VendaItem) -> None:
-		x = VendaItemDAO.listar_id(obj.id)
-		if x != None:
-			VendaItemDAO.objetos.remove(x)
-			VendaItemDAO.salvar()
-
-	@staticmethod
-	def salvar() -> None:
+	@classmethod
+	def salvar(cls) -> None:
 		with open("Jsons/vendaitens.json", mode = "w") as arquivo:
-			json.dump(VendaItemDAO.objetos, arquivo, default = vars)
+			json.dump(cls.objetos, arquivo, default = vars)
 
-	@staticmethod
-	def abrir() -> None:
-		VendaItemDAO.objetos = []
+	@classmethod
+	def abrir(cls) -> None:
+		cls.objetos = []
 		try:
 			with open("Jsons/vendaitens.json", mode = "r") as arquivo:
 				objetos_json = json.load(arquivo)
 				for obj in objetos_json:
 					vi = VendaItem(obj["id"], obj["qtd"], obj["preco"], obj["idVenda"], obj["idProduto"])
-					VendaItemDAO.objetos.append(vi)
+					cls.objetos.append(vi)
 		except FileNotFoundError:
-			VendaItemDAO.objetos = []
+			cls.objetos = []

@@ -18,5 +18,10 @@
         "id": 6,
         "idCliente": null,
         "itens": []
+    },
+    "6": {
+        "id": 7,
+        "idCliente": 6,
+        "itens": []
     }
 }

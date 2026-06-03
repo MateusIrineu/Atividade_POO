@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 from Admin.Cliente import Cliente, ClienteDAO
+from Admin.Crud import CRUD
 
 class Venda:
     def __init__(self, id: int, data: datetime, carrinho: bool, total: float, idCliente: int):
@@ -22,43 +23,8 @@ class Venda:
         nome = cliente.nome if cliente else "Desconhecido"
         return {"ID Compra": self.id, "Data": data_formatada,"Total": self.total, "Cliente": nome}
     
-class VendaDAO:
+class VendaDAO(CRUD):
     objetos: list[Venda] = []
-    @staticmethod
-    def inserir(obj: Venda) -> None:
-        VendaDAO.abrir()
-        if len(VendaDAO.objetos) == 0:
-            id = 1
-
-        else:
-            id = (max(VendaDAO.objetos, key = lambda x : x.id)).id + 1
-
-        obj.id = id
-        VendaDAO.objetos.append(obj)
-        VendaDAO.salvar()
-    
-    @staticmethod
-    def listar_id(id: int) -> Venda | None:
-        VendaDAO.abrir()
-        for obj in VendaDAO.objetos:
-            if obj.id == id:
-                return obj
-        return None
-    
-    @staticmethod
-    def atualizar(obj: Venda) -> None:
-        x = VendaDAO.listar_id(obj.id)
-        if x != None:
-            VendaDAO.objetos.remove(x)
-            VendaDAO.objetos.append(obj)
-            VendaDAO.salvar()
-
-    @staticmethod
-    def excluir(obj: Venda) -> None:
-        x = VendaDAO.listar_id(obj.id)
-        if x != None:
-            VendaDAO.objetos.remove(x)
-            VendaDAO.salvar()
             
     @staticmethod
     def converte_str(o):
@@ -66,19 +32,19 @@ class VendaDAO:
             return o.isoformat()
         return vars(o)
 
-    @staticmethod
-    def salvar() -> None:
+    @classmethod
+    def salvar(cls) -> None:
         with open("Jsons/vendas.json", mode = "w") as arquivo:
-            json.dump(VendaDAO.objetos, arquivo, default = VendaDAO.converte_str)
+            json.dump(cls.objetos, arquivo, default = cls.converte_str)
 
-    @staticmethod
-    def abrir() -> None:
-        VendaDAO.objetos = []
+    @classmethod
+    def abrir(cls) -> None:
+        cls.objetos = []
         try:
             with open("Jsons/vendas.json", mode = "r") as arquivo:
                 vendas_json = json.load(arquivo)
                 for obj in vendas_json:
                     v = Venda(obj["id"], datetime.fromisoformat(obj["data"]), obj["carrinho"], obj["total"], obj["idCliente"])
-                    VendaDAO.objetos.append(v)
+                    cls.objetos.append(v)
         except FileNotFoundError:
-            VendaDAO.objetos = []
+            cls.objetos = []

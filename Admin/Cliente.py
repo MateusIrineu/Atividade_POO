@@ -1,4 +1,5 @@
 import json
+from Admin.Crud import CRUD
 
 class Cliente:
     def __init__(self, id, nome, email, senha, fone):
@@ -13,63 +14,22 @@ class Cliente:
     def to_dict(self):
         return {"Id": self.id, "Nome": self.nome, "Email": self.email, "Telefone": self.fone}
     
-class ClienteDAO:
+class ClienteDAO(CRUD):
     objetos = []
-    @staticmethod
-    def inserir(obj):
-        ClienteDAO.abrir()
-        if len(ClienteDAO.objetos) == 0: 
-            id = 1
-
-        else: 
-            id = (max(ClienteDAO.objetos, key = lambda x : x.id)).id + 1
-
-        obj.id = id
-        ClienteDAO.objetos.append(obj)
-        ClienteDAO.salvar()
-
-    @staticmethod
-    def listar():
-        ClienteDAO.abrir()
-        ClienteDAO.objetos.sort(key = lambda x : x.nome)
-        return ClienteDAO.objetos
     
-    @staticmethod
-    def listar_id(id):
-        ClienteDAO.abrir()
-        for obj in ClienteDAO.objetos:
-            if obj.id == id: 
-                return obj
-        return None
-       
-    @staticmethod
-    def atualizar(obj):
-        x = ClienteDAO.listar_id(obj.id)
-        if x != None:
-            ClienteDAO.objetos.remove(x)
-            ClienteDAO.objetos.append(obj)
-            ClienteDAO.salvar()
-
-    @staticmethod
-    def excluir(obj):
-        x = ClienteDAO.listar_id(obj.id)
-        if x != None:
-            ClienteDAO.objetos.remove(x)
-            ClienteDAO.salvar()
-
-    @staticmethod
-    def salvar():
+    @classmethod
+    def salvar(cls):
         with open("Jsons/clientes.json", mode="w") as arquivo:
-            json.dump(ClienteDAO.objetos, arquivo, default = vars)  
+            json.dump(cls.objetos, arquivo, default = vars)  
                            
-    @staticmethod
-    def abrir():
-        ClienteDAO.objetos = []
+    @classmethod
+    def abrir(cls):
+        cls.objetos = []
         try:
             with open("Jsons/clientes.json", mode="r") as arquivo:
                 clientes_json = json.load(arquivo)
                 for obj in clientes_json:
                     c = Cliente(obj["id"], obj["nome"], obj["email"], obj["senha"], obj["fone"])
-                    ClienteDAO.objetos.append(c)        
+                    cls.objetos.append(c)        
         except FileNotFoundError:
             ClienteDAO.objetos = []

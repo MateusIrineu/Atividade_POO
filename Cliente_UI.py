@@ -51,6 +51,7 @@ class ClienteInterface:
                             "Preço": st.column_config.Column(alignment="left"),
                             "Estoque": st.column_config.Column(alignment="left"),
                             "idCategoria": st.column_config.Column(alignment="left"),
+                            "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto"),
                     })
 
         except ValueError as erro:
