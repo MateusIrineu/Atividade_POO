@@ -16,6 +16,12 @@ class Venda:
         nome = cliente.nome if cliente else "Desconhecido"
         return f"ID Compra: #{self.id} - Data: {data_formatada} - Total: R$ {self.total} - Cliente: {nome}"
     
+    def to_dict(self):
+        data_formatada = self.data.strftime("%d/%m/%Y - Horário: %H:%M:%S")
+        cliente = ClienteDAO.listar_id(self.idCliente)
+        nome = cliente.nome if cliente else "Desconhecido"
+        return {"ID Compra": self.id, "Data": data_formatada,"Total": self.total, "Cliente": nome}
+    
 class VendaDAO:
     objetos: list[Venda] = []
     @staticmethod
