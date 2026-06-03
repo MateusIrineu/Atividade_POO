@@ -59,14 +59,14 @@ class ClienteDAO:
 
     @staticmethod
     def salvar():
-        with open("clientes.json", mode="w") as arquivo:
+        with open("Jsons/clientes.json", mode="w") as arquivo:
             json.dump(ClienteDAO.objetos, arquivo, default = vars)  
                            
     @staticmethod
     def abrir():
         ClienteDAO.objetos = []
         try:
-            with open("clientes.json", mode="r") as arquivo:
+            with open("Jsons/clientes.json", mode="r") as arquivo:
                 clientes_json = json.load(arquivo)
                 for obj in clientes_json:
                     c = Cliente(obj["id"], obj["nome"], obj["email"], obj["senha"], obj["fone"])

@@ -119,14 +119,14 @@ class CarrinhoDAO:
                 "itens": [vars(item) for item in carrinho.itens]
             }
         
-        with open("Cliente/carrinhos.json", mode="w") as arquivo:
+        with open("Jsons/carrinhos.json", mode="w") as arquivo:
             json.dump(carrinhos_dict, arquivo, indent=4)
                            
     @staticmethod
     def abrir():
         CarrinhoDAO.carrinhos = {}
         try:
-            with open("Cliente/carrinhos.json", mode="r") as arquivo:
+            with open("Jsons/carrinhos.json", mode="r") as arquivo:
                 dados = json.load(arquivo)
                 
                 # Suporta estrutura antiga e nova

@@ -277,8 +277,9 @@ class AdminUI:
     def produto_atualizar() -> None:
         try:
             with st.form("form_atualizar_produto"):
-                for p in AdminView.produto_listar():
-                    st.dataframe([p.to_dict()], 
+                listar_produtos = [p.to_dict() for p in AdminView.produto_listar()] 
+                st.dataframe(
+                        listar_produtos,
                         column_config={
                             "Id": st.column_config.Column(alignment="left"),
                             "Nome": st.column_config.Column(alignment="left"),
@@ -321,8 +322,9 @@ class AdminUI:
         try:
 
             with st.form("form_excluir_produto"):
-                for p in AdminView.produto_listar():
-                    st.dataframe([p.to_dict()], 
+                listar_produtos = [p.to_dict() for p in AdminView.produto_listar()] 
+                st.dataframe(
+                        listar_produtos,
                         column_config={
                             "Id": st.column_config.Column(alignment="left"),
                             "Nome": st.column_config.Column(alignment="left"),
@@ -350,8 +352,9 @@ class AdminUI:
         try:
 
             with st.form("form_alterar_preco_produtos"):
-                for p in AdminView.produto_listar():
-                    st.dataframe([p.to_dict()], 
+                listar_produtos = [p.to_dict() for p in AdminView.produto_listar()] 
+                st.dataframe(
+                        listar_produtos,
                         column_config={
                             "Id": st.column_config.Column(alignment="left"),
                             "Nome": st.column_config.Column(alignment="left"),

@@ -60,13 +60,13 @@ class ProdutoDAO:
         self.salvar()
 
     def salvar(self) -> None:
-        with open("Admin/produtos.json", mode = "w") as arquivo:
+        with open("Jsons/produtos.json", mode = "w") as arquivo:
             json.dump(self.objetos, arquivo, default = vars)
 
     def abrir(self) -> None:
         self.objetos = []
         try:
-            with open("Admin/produtos.json", mode = "r") as arquivo:
+            with open("Jsons/produtos.json", mode = "r") as arquivo:
                 objetos_json = json.load(arquivo)
                 for obj in objetos_json:
                     p = Produto(obj["id"], obj["descricao"], obj["preco"], obj["estoque"], obj["idCategoria"])

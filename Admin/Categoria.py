@@ -50,13 +50,13 @@ class CategoriaDAO:
             self.salvar()
 
     def salvar(self):
-        with open("categorias.json", mode="w") as arquivo:
+        with open("Jsons/categorias.json", mode="w") as arquivo:
             json.dump(self.objetos, arquivo, default = vars)
                          
     def abrir(self):
         self.objetos = []
         try:
-            with open("categorias.json", mode="r") as arquivo:
+            with open("Jsons/categorias.json", mode="r") as arquivo:
                 objetos_json = json.load(arquivo)
                 for obj in objetos_json:
                     c = Categoria(obj["id"], obj["descricao"])

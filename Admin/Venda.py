@@ -36,12 +36,6 @@ class VendaDAO:
         obj.id = id
         VendaDAO.objetos.append(obj)
         VendaDAO.salvar()
-
-    # @staticmethod
-    # def listar() -> list[Venda]:
-    #     VendaDAO.abrir()
-    #     VendaDAO.objetos.sort(key = lambda x : x.id)
-    #     return VendaDAO.objetos
     
     @staticmethod
     def listar_id(id: int) -> Venda | None:
@@ -74,14 +68,14 @@ class VendaDAO:
 
     @staticmethod
     def salvar() -> None:
-        with open("vendas.json", mode = "w") as arquivo:
+        with open("Jsons/vendas.json", mode = "w") as arquivo:
             json.dump(VendaDAO.objetos, arquivo, default = VendaDAO.converte_str)
 
     @staticmethod
     def abrir() -> None:
         VendaDAO.objetos = []
         try:
-            with open("vendas.json", mode = "r") as arquivo:
+            with open("Jsons/vendas.json", mode = "r") as arquivo:
                 vendas_json = json.load(arquivo)
                 for obj in vendas_json:
                     v = Venda(obj["id"], datetime.fromisoformat(obj["data"]), obj["carrinho"], obj["total"], obj["idCliente"])

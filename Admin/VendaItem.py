@@ -56,14 +56,14 @@ class VendaItemDAO:
 
 	@staticmethod
 	def salvar() -> None:
-		with open("vendaitens.json", mode = "w") as arquivo:
+		with open("Jsons/vendaitens.json", mode = "w") as arquivo:
 			json.dump(VendaItemDAO.objetos, arquivo, default = vars)
 
 	@staticmethod
 	def abrir() -> None:
 		VendaItemDAO.objetos = []
 		try:
-			with open("vendaitens.json", mode = "r") as arquivo:
+			with open("Jsons/vendaitens.json", mode = "r") as arquivo:
 				objetos_json = json.load(arquivo)
 				for obj in objetos_json:
 					vi = VendaItem(obj["id"], obj["qtd"], obj["preco"], obj["idVenda"], obj["idProduto"])

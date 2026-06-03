@@ -1,0 +1,22 @@
+{
+    "2": {
+        "id": 3,
+        "idCliente": 2,
+        "itens": []
+    },
+    "5": {
+        "id": 4,
+        "idCliente": 5,
+        "itens": []
+    },
+    "4": {
+        "id": 5,
+        "idCliente": 4,
+        "itens": []
+    },
+    "None": {
+        "id": 6,
+        "idCliente": null,
+        "itens": []
+    }
+}
