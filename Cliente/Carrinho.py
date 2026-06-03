@@ -15,7 +15,7 @@ class CarrinhoItem:
         return f"Produto #{self.idProduto} - {self.descricao} - Quantidade: {self.quantidade} - Preço: {self.preco}"
 
     def to_dict(self):
-        return {"Produto": self.descricao, "Quantidade": self.quantidade, "Preco": self.preco}
+        return {"Produto": self.descricao, "Quantidade": self.quantidade, "Preço": self.preco}
     
 class Carrinho:
     def __init__(self, id: int, idCliente: int):

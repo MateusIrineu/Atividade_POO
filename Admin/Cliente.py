@@ -8,7 +8,10 @@ class Cliente:
         self.senha = senha
         self.fone = fone
     def __str__(self):
-        return f"#{self.id} - Nome: {self.nome} - Email: {self.email} - Senha: {self.senha} - Telefone: {self.fone}"
+        return f"Id: {self.id} - Nome: {self.nome} - Email: {self.email} - Senha: {self.senha} - Telefone: {self.fone}"
+    
+    def to_dict(self):
+        return {"Id": self.id, "Nome": self.nome, "Email": self.email, "Telefone": self.fone}
     
 class ClienteDAO:
     objetos = []

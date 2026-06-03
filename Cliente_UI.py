@@ -38,19 +38,27 @@ class ClienteInterface:
     #VER PRODUTOS E ADICIONAR AO CARRINHO
     @staticmethod
     def produto_listar()-> None:
-        st.header("Listagem de Produtos", divider="blue")
+        st.header("Produtos", divider="blue")
         try:
             with st.container(border=True):
                 st.subheader("Produtos Disponiveis")
-                for p in ClienteView.listar_produtos():
-                    st.dataframe([p.to_dict()])
+                listar_produtos = [p.to_dict() for p in ClienteView.listar_produtos()]
+                st.dataframe(
+                        listar_produtos, 
+                        column_config={
+                            "Id": st.column_config.Column(alignment="left"),
+                            "Nome": st.column_config.Column(alignment="left"),
+                            "Preço": st.column_config.Column(alignment="left"),
+                            "Estoque": st.column_config.Column(alignment="left"),
+                            "idCategoria": st.column_config.Column(alignment="left"),
+                    })
 
         except ValueError as erro:
             print(" ---- Erro ---->", erro)
 
         try:
             with st.container(border=True):
-                    st.subheader("Adicionar Produtos")
+                    st.subheader("Adicionar produtos ao carrinho")
                     idProduto = st.number_input("Informe o ID do produto: ", min_value=1)
                     quantidade = st.number_input("Informe a quantidade: ", min_value=1)
                     if st.button("Adicionar ao Carrinho"):
@@ -73,31 +81,45 @@ class ClienteInterface:
         
         if ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado): 
             with st.container(border=True):
-                for c in ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado):
-                    st.dataframe([c.to_dict()])
-            if st.button("Limpar Carrinho"):
-                ClienteView.limpar_carrinho(st.session_state.id_cliente_logado)
-                st.success("Carrinho limpo!")
-                time.sleep(2)
-                st.rerun()
+                listar_carrinho = [c.to_dict() for c in ClienteView.visualizar_carrinho(st.session_state.id_cliente_logado)]
+                st.dataframe(
+                        listar_carrinho,
+                        column_config={
+                                "Quantidade": st.column_config.Column(alignment="left"),
+                                "Preço": st.column_config.Column(alignment="left")
+                            })
 
-            if st.button("Confirmar Compra"):
-                    if ClienteView.comprar_carrinho(st.session_state.id_cliente_logado):
-                        st.success("Compra realizada com sucesso!")
-                        time.sleep(2)
-                        st.rerun()
-                    else:
-                        st.error("Carrinho vazio!")
+            col1, col2 = st.columns(2)
+
+            with col1:
+                if st.button("Limpar Carrinho", use_container_width=True, type="secondary"):
+                    ClienteView.limpar_carrinho(st.session_state.id_cliente_logado)
+                    st.success("Carrinho limpo!")
+                    time.sleep(2)
+                    st.rerun()
+            with col2:
+                if st.button("Confirmar Compra", use_container_width=True, type="primary"):
+                        if ClienteView.comprar_carrinho(st.session_state.id_cliente_logado):
+                            st.success("Compra realizada com sucesso!")
+                            time.sleep(2)
+                            st.rerun()
+                        else:
+                            st.error("Carrinho vazio!")
         else:
-            st.info("Seu Carrinho esta vazio no momento!!")
+            st.info("Seu Carrinho esta vazio no momento!")
     
     @staticmethod
     def ver_pedidos()-> None:
         st.header("Historico de Compras", divider="green")
         try:   
             with st.container(border=True):
-                for p in ClienteView.listar_compras(st.session_state.id_cliente_logado):
-                    st.dataframe([p.to_dict()])
+                listar_compras = [p.to_dict() for p in ClienteView.listar_compras(st.session_state.id_cliente_logado)]
+                st.dataframe(
+                        listar_compras,
+                        column_config={
+                                "ID Compra": st.column_config.Column(alignment="left"),
+                                "Total": st.column_config.Column(alignment="left")
+                            })
 
         except ValueError as erro:
             print(" ---- Erro ---->", erro)

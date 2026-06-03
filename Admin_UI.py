@@ -28,43 +28,37 @@ class AdminUI:
 
         if aba_selecionada == "Clientes":
             st.header("Gerenciamento de Clientes", divider="red")
-            aba1, aba2, aba3, aba4 = st.tabs(["Inserir Cliente", "Listar Clientes", "Atualizar Cliente","Excluir Cliente"])
+            aba1, aba2, aba3 = st.tabs(["Inserir Cliente", "Atualizar Cliente","Excluir Cliente"])
 
             with aba1:
                 AdminUI.cliente_inserir()
             with aba2:
-                AdminUI.cliente_listar()
-            with aba3:
                 AdminUI.cliente_atualizar()
-            with aba4:
+            with aba3:
                 AdminUI.cliente_excluir()
 
         if aba_selecionada == "Categorias":
             st.header("Gerenciamento de Categorias", divider="red")
-            aba1, aba2, aba3, aba4 = st.tabs(["Inserir Categoria", "Listar Categorias", "Atualizar Categoiria", "Excluir Categoria"])
+            aba1, aba2, aba3 = st.tabs(["Inserir Categoria", "Atualizar Categoiria", "Excluir Categoria"])
 
             with aba1:
                 AdminUI.categoria_inserir()
             with aba2:
-                AdminUI.categoria_listar()
-            with aba3:
                 AdminUI.categoria_atualizar()
-            with aba4:
+            with aba3:
                 AdminUI.categoria_excluir()
 
         if aba_selecionada == "Produtos":
             st.header("Gerenciamento de Produtos", divider="red")
-            aba1, aba2, aba3, aba4, aba5 = st.tabs(["Inserir Produto", "Listar Produtos", "Atualizar Produto", "Excluir Produto", "Alterar Preço"])
+            aba1, aba2, aba3, aba4 = st.tabs(["Inserir Produto", "Atualizar Produto", "Excluir Produto", "Alterar Preço"])
 
             with aba1:
                 AdminUI.produto_inserir()
             with aba2:
-                AdminUI.produto_listar()
-            with aba3:
                 AdminUI.produto_atualizar()
-            with aba4:
+            with aba3:
                 AdminUI.produto_excluir()
-            with aba5:
+            with aba4:
                 AdminUI.produto_alterar_preco_geral()
 
     @staticmethod
@@ -105,7 +99,16 @@ class AdminUI:
     def cliente_atualizar() -> None:
         try:
             with st.form("form_atualizar_cliente"):
-                AdminUI.cliente_listar()
+                lista_clientes = [p.to_dict() for p in AdminView.cliente_listar()]
+                st.dataframe(
+                    lista_clientes,
+                    column_config={
+                        "Id": st.column_config.Column(alignment="left"),
+                        "Nome": st.column_config.Column(alignment="left"),
+                        "Email": st.column_config.Column(alignment="left"),
+                        "Telefone": st.column_config.Column(alignment="left"),
+                    })
+                    
                 st.subheader("Atualização de Cliente")
                 id_str: str = st.text_input("Qual o id do cliente a ser atualizado: ", value=1) or ''
                 id: int = int(id_str) if id_str.isdigit() else 0
@@ -127,7 +130,15 @@ class AdminUI:
     def cliente_excluir() -> None:
         try:
             with st.form("form_excluir_cliente"):
-                AdminUI.cliente_listar()
+                lista_clientes = [p.to_dict() for p in AdminView.cliente_listar()]
+                st.dataframe(
+                    lista_clientes,
+                    column_config={
+                        "Id": st.column_config.Column(alignment="left"),
+                        "Nome": st.column_config.Column(alignment="left"),
+                        "Email": st.column_config.Column(alignment="left"),
+                        "Telefone": st.column_config.Column(alignment="left"),
+                    })
                 st.subheader("Exclusão de Cliente")
                 id_str: str = st.text_input("Qual o id do cliente a ser excluído: ", value=1) or ''
                 id: int = int(id_str) if id_str.isdigit() else 0
@@ -147,7 +158,7 @@ class AdminUI:
         try:
             with st.form("form_inserir_categoria"):
                 st.subheader("Cadastro de Categorias")
-                desc: str = st.text_input("Informe a descrição: ")
+                desc: str = st.text_input("Informe o nome da nova descrição: ")
 
                 submit: bool = st.form_submit_button("Inserir Categoria", type="secondary")
 
@@ -173,7 +184,13 @@ class AdminUI:
     def categoria_atualizar() -> None:
         try:
             with st.form("form_atualizar_categoria"):
-                AdminUI.categoria_listar()
+                listr_categorias = [p.to_dict() for p in AdminView.categoria_listar()]
+                st.dataframe(
+                    listr_categorias,
+                    column_config={
+                        "Id": st.column_config.Column(alignment="left")
+                    })
+
                 st.subheader("Atualização de Cliente")
 
                 id_str: str = st.text_input("Qual o id da categoria a ser atualizado: ", value=1) or ''
@@ -194,7 +211,12 @@ class AdminUI:
     def categoria_excluir() -> None:
         try:
             with st.form("form_excluir_categoria"):
-                AdminUI.categoria_listar()
+                listr_categorias = [p.to_dict() for p in AdminView.categoria_listar()]
+                st.dataframe(
+                    listr_categorias,
+                    column_config={
+                        "Id": st.column_config.Column(alignment="left")
+                    })
                 st.subheader("Exclusão de Categoria")
 
                 id_str = st.text_input("Qual o id da categoria a ser excluído: ", value=1) or ''
@@ -255,7 +277,15 @@ class AdminUI:
     def produto_atualizar() -> None:
         try:
             with st.form("form_atualizar_produto"):
-                AdminUI.produto_listar()
+                for p in AdminView.produto_listar():
+                    st.dataframe([p.to_dict()], 
+                        column_config={
+                            "Id": st.column_config.Column(alignment="left"),
+                            "Nome": st.column_config.Column(alignment="left"),
+                            "Preço": st.column_config.Column(alignment="left"),
+                            "Estoque": st.column_config.Column(alignment="left"),
+                            "idCategoria": st.column_config.Column(alignment="left"),
+                    })
                 st.subheader("Atualização de Produto")
 
                 id_str: str = st.text_input("Insira o id do produto a ser atualizado: ", value=1) or ''
@@ -291,7 +321,15 @@ class AdminUI:
         try:
 
             with st.form("form_excluir_produto"):
-                AdminUI.produto_listar()
+                for p in AdminView.produto_listar():
+                    st.dataframe([p.to_dict()], 
+                        column_config={
+                            "Id": st.column_config.Column(alignment="left"),
+                            "Nome": st.column_config.Column(alignment="left"),
+                            "Preço": st.column_config.Column(alignment="left"),
+                            "Estoque": st.column_config.Column(alignment="left"),
+                            "idCategoria": st.column_config.Column(alignment="left"),
+                    })
                 st.subheader("Exclusão de Produto")
 
                 id_str: str = st.text_input("Insira o id do produto a ser excluído: ", value=1) or ''
@@ -312,7 +350,15 @@ class AdminUI:
         try:
 
             with st.form("form_alterar_preco_produtos"):
-                AdminUI.produto_listar()
+                for p in AdminView.produto_listar():
+                    st.dataframe([p.to_dict()], 
+                        column_config={
+                            "Id": st.column_config.Column(alignment="left"),
+                            "Nome": st.column_config.Column(alignment="left"),
+                            "Preço": st.column_config.Column(alignment="left"),
+                            "Estoque": st.column_config.Column(alignment="left"),
+                            "idCategoria": st.column_config.Column(alignment="left"),
+                    })
                 st.subheader("Alteração de Preços")
 
                 percentual_str: str = st.text_input("Insira o percentual de alteracao (ex: 10 para +10%, -5 para -5%): ", value=1.0) or ''

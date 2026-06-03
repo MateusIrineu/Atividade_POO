@@ -17,7 +17,13 @@
                 "idProduto": 1,
                 "descricao": "Feij\u00e3o",
                 "quantidade": 1,
-                "preco": 6.35
+                "preco": 6.67
+            },
+            {
+                "idProduto": 1,
+                "descricao": "Feij\u00e3o",
+                "quantidade": 1,
+                "preco": 6.67
             }
         ]
     },

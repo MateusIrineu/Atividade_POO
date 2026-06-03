@@ -7,6 +7,9 @@ class Categoria:
     def __str__(self):
         return f"{self.id} - {self.descricao}"
     
+    def to_dict(self):
+        return {"Id": self.id, "Descrição": self.descricao}
+    
 class CategoriaDAO:
     def __init__(self):
         self.objetos = []
