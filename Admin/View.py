@@ -46,8 +46,8 @@ class View:
 
     #PRODUTO
     @staticmethod
-    def produto_inserir(descricao, preco, estoque, idCategoria):
-        p = Produto(0, descricao, preco, estoque, idCategoria)
+    def produto_inserir(descricao, preco, estoque, idCategoria, imagem):
+        p = Produto(0, descricao, preco, estoque, idCategoria, imagem)
         ProdutoDAO().inserir(p)
     
     @staticmethod
@@ -55,13 +55,13 @@ class View:
         return ProdutoDAO().listar()
 
     @staticmethod
-    def produto_atualizar(id, descricao, preco, estoque, idCategoria):
-        p = Produto(id, descricao, preco, estoque, idCategoria)
+    def produto_atualizar(id, descricao, preco, estoque, idCategoria, imagem):
+        p = Produto(id, descricao, preco, estoque, idCategoria, imagem)
         ProdutoDAO().atualizar(p)
 
     @staticmethod
     def produto_excluir(id):
-        p = Produto(id, "", 0.0, 0, 0)
+        p = Produto(id, "", 0.0, 0, 0, "")
         ProdutoDAO().excluir(p)
 
     @staticmethod
@@ -70,5 +70,5 @@ class View:
 
     #VENDA
     @staticmethod
-    def listar_vendas():
-        return CarrinhoDAO.listar_compras()
+    def listar_vendas(idCliente):
+        return CarrinhoDAO.listar_compras(idCliente)

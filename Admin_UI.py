@@ -2,6 +2,7 @@ from Admin.View import View as AdminView
 import streamlit as st
 from streamlit_option_menu import option_menu
 import time
+import base64
 
 class AdminUI:
     #TELA DE ACESSO DO ADMIN
@@ -251,11 +252,19 @@ class AdminUI:
 
                 idCategoria_str: str = st.text_input("Insira a categoria do produto: ", value=1) or ''
                 idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
+
+                imagem_arquivo = st.file_uploader("Selecione a imagem do produto", type=['png', 'jpg', 'jpeg'])
             
                 submit: bool = st.form_submit_button("Inserir produto", type="secondary")
                 
             if submit:
-                AdminView.produto_inserir(descricao, preco, estoque, idCategoria)
+                imagem_base64: str = ''
+
+                if imagem_arquivo is not None:
+                    bytes_data = imagem_arquivo.getvalue()
+                    imagem_base64 = base64.b64encode(bytes_data).decode("utf-8")
+
+                AdminView.produto_inserir(descricao, preco, estoque, idCategoria, imagem_base64)
                 st.success("Produto inserido com sucesso!")
                 time.sleep(2)
                 st.rerun()
@@ -286,6 +295,7 @@ class AdminUI:
                             "Preço": st.column_config.Column(alignment="left"),
                             "Estoque": st.column_config.Column(alignment="left"),
                             "idCategoria": st.column_config.Column(alignment="left"),
+                            "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto")
                     })
                 st.subheader("Atualização de Produto")
 
@@ -306,10 +316,19 @@ class AdminUI:
                 idCategoria_str: str = st.text_input("Insira o id da nova categoria do produto: ", value=1) or ''
                 idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
 
+                image_arquivo = st.file_uploader("Selecione a nova imagem do produto(deixe em branco se quiser manter a atual)", type=['png', 'jpg', 'jpeg'])
+
+
                 submit: bool = st.form_submit_button("Atualizar produto", type="secondary")
 
             if submit:
-                AdminView.produto_atualizar(id, descricao, preco, estoque, idCategoria)
+                image_base64 = ''
+
+                if image_arquivo is not None:
+                    bytes_data = image_arquivo.getvalue()
+                    image_base64 = base64.b64encode(bytes_data).decode("utf-8")
+
+                AdminView.produto_atualizar(id, descricao, preco, estoque, idCategoria, image_base64)
                 st.success("Produto atualizado com sucesso!")
                 time.sleep(2)
                 st.rerun()
@@ -325,12 +344,14 @@ class AdminUI:
                 listar_produtos = [p.to_dict() for p in AdminView.produto_listar()] 
                 st.dataframe(
                         listar_produtos,
+                        use_container_width=True,
                         column_config={
                             "Id": st.column_config.Column(alignment="left"),
                             "Nome": st.column_config.Column(alignment="left"),
                             "Preço": st.column_config.Column(alignment="left"),
                             "Estoque": st.column_config.Column(alignment="left"),
                             "idCategoria": st.column_config.Column(alignment="left"),
+                            "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto", width="small")
                     })
                 st.subheader("Exclusão de Produto")
 
@@ -361,6 +382,8 @@ class AdminUI:
                             "Preço": st.column_config.Column(alignment="left"),
                             "Estoque": st.column_config.Column(alignment="left"),
                             "idCategoria": st.column_config.Column(alignment="left"),
+                            "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto", width="small")
+
                     })
                 st.subheader("Alteração de Preços")
 

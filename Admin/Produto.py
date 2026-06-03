@@ -1,17 +1,19 @@
 import json
 # vou utilizar tipado esse arquivo por fins de estudo
 class Produto:
-    def __init__(self, id: int, descricao: str, preco: float, estoque: int, idCategoria: int ):
+    def __init__(self, id: int, descricao: str, preco: float, estoque: int, idCategoria: int, imagem: str ):
         self.id = id
         self.descricao = descricao
         self.preco = preco
         self.estoque = estoque
         self.idCategoria = idCategoria
+        self.imagem = imagem
+
     def __str__(self) -> str:
-        return f" #{self.id} - Nome: {self.descricao} - Preço: R$ {self.preco} - Estoque: {self.estoque} - id da Categoria: #{self.idCategoria}"
+        return f" #{self.id} - Nome: {self.descricao} - Preço: R$ {self.preco} - Estoque: {self.estoque} - id da Categoria: #{self.idCategoria} - imagem: {self.imagem}"
     
     def to_dict(self):
-        return {"Id":self.id,"Nome": self.descricao, "Preço": self.preco, "Estoque": self.estoque, "idCategoria": self.idCategoria}
+        return {"Id":self.id,"Nome": self.descricao, "Preço": self.preco, "Estoque": self.estoque, "idCategoria": self.idCategoria, "Imagem": f"data:image/png;base64,{self.imagem}" if self.imagem else None}
     
 class ProdutoDAO:
     def __init__(self):
@@ -69,7 +71,7 @@ class ProdutoDAO:
             with open("Jsons/produtos.json", mode = "r") as arquivo:
                 objetos_json = json.load(arquivo)
                 for obj in objetos_json:
-                    p = Produto(obj["id"], obj["descricao"], obj["preco"], obj["estoque"], obj["idCategoria"])
+                    p = Produto(obj["id"], obj["descricao"], obj["preco"], obj["estoque"], obj["idCategoria"], obj["imagem"])
                     self.objetos.append(p)
         except FileNotFoundError:
             self.objetos = []
