@@ -43,6 +43,7 @@ class ClienteInterface:
             with st.container(border=True):
                 st.subheader("Produtos Disponiveis")
                 listar_produtos = [p.to_dict() for p in ClienteView.listar_produtos()]
+                st.caption("A partir de 5 unidades, voce ganha um desconto de 25%.")
                 st.dataframe(
                         listar_produtos, 
                         column_config={
@@ -89,6 +90,8 @@ class ClienteInterface:
                                 "Quantidade": st.column_config.Column(alignment="left"),
                                 "Preço": st.column_config.Column(alignment="left")
                             })
+                total = ClienteView.total_carrinho_com_desconto(st.session_state.id_cliente_logado)
+                st.success(f"Total a pagar com desconto: R$ {total:.2f}")
 
             col1, col2 = st.columns(2)
 
@@ -106,6 +109,8 @@ class ClienteInterface:
                             st.rerun()
                         else:
                             st.error("Carrinho vazio!")
+            
+
         else:
             st.info("Seu Carrinho esta vazio no momento!")
     

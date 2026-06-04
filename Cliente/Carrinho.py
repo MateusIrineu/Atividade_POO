@@ -64,7 +64,11 @@ class CarrinhoDAO:
         # Calcula total
         total = 0.0
         for item in carrinho.itens:
-            total += item.preco * item.quantidade
+            subtotal = item.preco * item.quantidade
+            if item.quantidade >= 5:
+                subtotal = subtotal * 0.75
+            total += subtotal
+
         
         # Cria Venda
         venda = Venda(0, datetime.now(), False, total, idCliente)
@@ -108,6 +112,19 @@ class CarrinhoDAO:
         VendaDAO.abrir()
         compras_cliente = [venda for venda in VendaDAO.objetos if venda.idCliente == idCliente]
         return compras_cliente
+
+    @staticmethod
+    def total_com_desconto(idCliente):
+        CarrinhoDAO.abrir()
+        total = 0.0
+
+        for item in CarrinhoDAO.visualizar_carrinho(idCliente):
+            subtotal = item.preco * item.quantidade
+            if item.quantidade >= 5:
+                subtotal = subtotal * 0.75
+            total += subtotal
+
+        return total
 
     @staticmethod
     def salvar():

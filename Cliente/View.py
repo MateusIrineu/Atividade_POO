@@ -32,3 +32,7 @@ class View:
     @staticmethod
     def limpar_carrinho(idCliente):
         return CarrinhoDAO.limpar_carrinho(idCliente)
+
+    @staticmethod
+    def total_carrinho_com_desconto(idCliente):
+        return CarrinhoDAO.total_com_desconto(idCliente)

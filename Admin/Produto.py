@@ -28,6 +28,14 @@ class ProdutoDAO(CRUD):
         cls.salvar()
 
     @classmethod
+    def aplicar_desconto(cls, percentual: float) -> None:
+
+        cls.abrir()
+        for produto in cls.objetos:
+            produto.preco = round(produto.preco - (produto.preco * percentual / 100), 2)
+        cls.salvar()
+
+    @classmethod
     def salvar(cls) -> None:
         with open("Jsons/produtos.json", mode = "w") as arquivo:
             json.dump(cls.objetos, arquivo, default = vars)
