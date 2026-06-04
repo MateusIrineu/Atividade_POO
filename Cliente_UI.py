@@ -91,7 +91,7 @@ class ClienteInterface:
                                 "Preço": st.column_config.Column(alignment="left")
                             })
                 total = ClienteView.total_carrinho_com_desconto(st.session_state.id_cliente_logado)
-                st.success(f"Total a pagar com desconto: R$ {total:.2f}")
+                st.success(f"Total a pagar: R$ {total:.2f}")
 
             col1, col2 = st.columns(2)
 
