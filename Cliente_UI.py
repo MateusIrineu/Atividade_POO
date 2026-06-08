@@ -42,16 +42,16 @@ class ClienteInterface:
         try:
             with st.container(border=True):
                 st.subheader("Produtos Disponiveis")
-                listar_produtos = [p.to_dict() for p in ClienteView.listar_produtos()]
-                st.caption("A partir de 5 unidades, voce ganha um desconto de 25%.")
+                listar_produtos = ClienteView.listar_produtos()
+                st.caption("Produtos com desconto de categoria estão destacados na coluna 'Preço com Desconto'.")
                 st.dataframe(
-                        listar_produtos, 
+                        listar_produtos,
                         column_config={
                             "Id": st.column_config.Column(alignment="left"),
                             "Nome": st.column_config.Column(alignment="left"),
-                            "Preço": st.column_config.Column(alignment="left"),
+                            "Preço Original": st.column_config.Column(alignment="left"),
+                            "Preço com Desconto": st.column_config.Column(alignment="left"),
                             "Estoque": st.column_config.Column(alignment="left"),
-                            "idCategoria": st.column_config.Column(alignment="left"),
                             "Imagem": st.column_config.ImageColumn("Imagem", help="Prévia do produto"),
                     })
 

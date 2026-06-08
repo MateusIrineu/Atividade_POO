@@ -1,20 +1,47 @@
 from .Carrinho import Carrinho, CarrinhoDAO
 from Admin.Produto import Produto, ProdutoDAO
+from Admin.Promocao import PromocaoDAO
 
 class View:
     # CARRINHO
     @staticmethod
     def listar_produtos():
-        return ProdutoDAO().listar()
-    
+        produtos = ProdutoDAO().listar()
+        resultado = []
+        for p in produtos:
+            desconto = PromocaoDAO.obter_desconto_categoria(p.idCategoria)
+            if desconto > 0:
+                preco_com_desconto = round(p.preco * (1 - desconto / 100), 2)
+                resultado.append({
+                    "Id": p.id,
+                    "Nome": p.descricao,
+                    "Preço Original": f"R$ {p.preco:.2f}",
+                    "Preço com Desconto": f"R$ {preco_com_desconto:.2f} ({desconto:.0f}% OFF)",
+                    "Estoque": p.estoque,
+                    "Imagem": f"data:image/png;base64,{p.imagem}" if p.imagem else None
+                })
+            else:
+                resultado.append({
+                    "Id": p.id,
+                    "Nome": p.descricao,
+                    "Preço Original": f"R$ {p.preco:.2f}",
+                    "Preço com Desconto": "-",
+                    "Estoque": p.estoque,
+                    "Imagem": f"data:image/png;base64,{p.imagem}" if p.imagem else None
+                })
+        return resultado
+
     @staticmethod
     def inserir_produto_carrinho(idCliente, idProduto, quantidade):
         produto = ProdutoDAO().listar_id(idProduto)
 
         if produto is None:
             return False
-        
-        CarrinhoDAO.inserir_produto_carrinho(idCliente, idProduto, produto.descricao, quantidade, produto.preco)
+
+        desconto = PromocaoDAO.obter_desconto_categoria(produto.idCategoria)
+        preco_final = round(produto.preco * (1 - desconto / 100), 2) if desconto > 0 else produto.preco
+
+        CarrinhoDAO.inserir_produto_carrinho(idCliente, idProduto, produto.descricao, quantidade, preco_final)
         return True
     
     @staticmethod

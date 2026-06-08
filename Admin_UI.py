@@ -18,8 +18,8 @@ class AdminUI:
 
             aba_selecionada = option_menu(
                 menu_title = "Painel Admin",
-                options = ["Clientes", "Categorias", "Produtos"],
-                icons = ["people", "tags", "box-seam" ],
+                options = ["Clientes", "Categorias", "Produtos", "Promoções"],
+                icons = ["people", "tags", "box-seam", "percent"],
                 default_index = 0,
                 key = "admin_menu"
             )
@@ -61,6 +61,15 @@ class AdminUI:
                 AdminUI.produto_excluir()
             with aba4:
                 AdminUI.produto_alterar_preco_geral()
+
+        if aba_selecionada == "Promoções":
+            st.header("Gerenciamento de Promoções", divider="orange")
+            aba1, aba2 = st.tabs(["Inserir Promoção", "Excluir Promoção"])
+
+            with aba1:
+                AdminUI.promocao_inserir()
+            with aba2:
+                AdminUI.promocao_excluir()
 
     @staticmethod
     def sair() -> None:
@@ -398,6 +407,60 @@ class AdminUI:
             if submit:
                 AdminView.produto_alterar_preco_geral(percentual)
                 st.success("Precos alterados com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
+
+    @staticmethod
+    def promocao_inserir() -> None:
+        try:
+            with st.form("form_inserir_promocao"):
+                lista_categorias = [c.to_dict() for c in AdminView.categoria_listar()]
+                st.dataframe(lista_categorias)
+
+                st.subheader("Nova Promoção por Categoria")
+                idCategoria_str = st.text_input("ID da Categoria:", value="1") or "1"
+                idCategoria = int(idCategoria_str) if idCategoria_str.isdigit() else 0
+
+                percentual_str = st.text_input("Percentual de desconto (ex: 15 para 15%):", value="10") or "10"
+                try:
+                    percentual = float(percentual_str.replace(",", "."))
+                except ValueError:
+                    percentual = 0.0
+
+                inicio = st.date_input("Data de início:")
+                fim = st.date_input("Data de fim:")
+
+                submit = st.form_submit_button("Inserir Promoção", type="secondary")
+
+            if submit:
+                AdminView.promocao_inserir(idCategoria, percentual, inicio.isoformat(), fim.isoformat())
+                st.success("Promoção inserida com sucesso!")
+                time.sleep(2)
+                st.rerun()
+        except ValueError as erro:
+            print(" ---- Erro ---->", erro)
+
+    @staticmethod
+    def promocao_excluir() -> None:
+        try:
+            lista_promocoes = [p.to_dict() for p in AdminView.promocao_listar()]
+            if lista_promocoes:
+                st.dataframe(lista_promocoes)
+            else:
+                st.info("Nenhuma promoção cadastrada.")
+                return
+
+            with st.form("form_excluir_promocao"):
+                st.subheader("Excluir Promoção")
+                id_str = st.text_input("ID da promoção a excluir:", value="1") or "1"
+                id = int(id_str) if id_str.isdigit() else 0
+                submit = st.form_submit_button("Excluir Promoção", type="secondary")
+
+            if submit:
+                AdminView.promocao_excluir(id)
+                st.success("Promoção excluída com sucesso!")
                 time.sleep(2)
                 st.rerun()
         except ValueError as erro:
