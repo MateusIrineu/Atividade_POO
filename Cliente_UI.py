@@ -103,14 +103,19 @@ class ClienteInterface:
                     st.rerun()
             with col2:
                 if st.button("Confirmar Compra", use_container_width=True, type="primary"):
-                        if ClienteView.comprar_carrinho(st.session_state.id_cliente_logado):
-                            st.success("Compra realizada com sucesso!")
-                            time.sleep(2)
-                            st.rerun()
-                        else:
-                            st.error("Carrinho vazio!")
-            
+                    resultado = ClienteView.comprar_carrinho(st.session_state.id_cliente_logado)
 
+                    # sucesso: True ou (True, None)
+                    if resultado is True or (isinstance(resultado, tuple) and resultado[0] is True):
+                        st.success("Compra realizada com sucesso!")
+                        time.sleep(2)
+                        st.rerun()
+                        return
+
+                    # falha detalhada com faltantes: (False, faltantes)
+                    if isinstance(resultado, tuple) and resultado[1]:
+                        st.error("Não foi possível finalizar a compra — Estoque insuficiente")
+            
         else:
             st.info("Seu Carrinho esta vazio no momento!")
     

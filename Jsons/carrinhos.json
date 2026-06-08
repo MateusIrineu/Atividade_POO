@@ -22,13 +22,6 @@
     "6": {
         "id": 7,
         "idCliente": 6,
-        "itens": [
-            {
-                "idProduto": 6,
-                "descricao": "Desinfetante",
-                "quantidade": 1,
-                "preco": 7.0
-            }
-        ]
+        "itens": []
     }
 }

@@ -55,11 +55,11 @@ class CarrinhoDAO:
         
         idCliente_str = str(idCliente)
         if idCliente_str not in CarrinhoDAO.carrinhos:
-            return False
+            return False, None
         
         carrinho = CarrinhoDAO.carrinhos[idCliente_str]
         if len(carrinho.itens) == 0:
-            return False
+            return False, None
         
         # Calcula total
         total = 0.0
@@ -69,26 +69,36 @@ class CarrinhoDAO:
                 subtotal = subtotal * 0.75
             total += subtotal
 
-        
-        # Cria Venda
+        # consolida quantidades por produto
+        itens_por_produto = {}
+        for item in carrinho.itens:
+            itens_por_produto[item.idProduto] = itens_por_produto.get(item.idProduto, 0) + item.quantidade
+
+        # valida estoque primeiro
+        ok, faltantes = ProdutoDAO.validar_estoque_lote(itens_por_produto)
+        if not ok:
+            return False, faltantes
+
+        # cria venda
         venda = Venda(0, datetime.now(), False, total, idCliente)
         VendaDAO.inserir(venda)
-        
-        # Verifica se a venda foi inserida com sucesso
         if venda.id == 0:
-            return False
-        
+            return False, None
+
+        # efetiva baixa de estoque (já validado)
+        if not ProdutoDAO.diminuir_estoque(itens_por_produto):
+            # tentativa de rollback: remover venda criada
+            VendaDAO.excluir(venda)
+            return False, None
+
         venda_id = venda.id
-        
-        # Cria VendaItem para cada item do carrinho
         for item in carrinho.itens:
             venda_item = VendaItem(0, item.quantidade, item.preco, venda_id, item.idProduto)
             VendaItemDAO.inserir(venda_item)
-        
-        # Limpa carrinho
+
         carrinho.itens = []
         CarrinhoDAO.salvar()
-        return True
+        return True, None
     
     @staticmethod
     def limpar_carrinho(idCliente):

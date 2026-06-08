@@ -52,4 +52,34 @@ class ProdutoDAO(CRUD):
         except FileNotFoundError:
             cls.objetos = []
 
-    
+    @classmethod
+    def validar_estoque_lote(cls, itens: dict):
+        """
+        itens: { idProduto: quantidade_total }
+        Retorna: (True, None) se OK
+                (False, [(idProduto, solicitado, disponivel), ...]) se faltar
+        """
+        cls.abrir()
+        produtos_por_id = {p.id: p for p in cls.objetos}
+        faltantes = []
+
+        for id_prod, qtd in itens.items():
+            produto = produtos_por_id.get(id_prod)
+            disponivel = produto.estoque if produto else 0
+            if produto is None or qtd <= 0 or disponivel < qtd:
+                faltantes.append((id_prod, qtd, disponivel))
+
+        if faltantes:
+            return False, faltantes
+        return True, None
+
+    @classmethod
+    def diminuir_estoque(cls, itens: dict) -> bool:
+        """Mantém para efetivar a baixa — pressupõe que a validação já ocorreu."""
+        cls.abrir()
+        produtos_por_id = {p.id: p for p in cls.objetos}
+        for id_prod, qtd in itens.items():
+            produtos_por_id[id_prod].estoque -= qtd
+        cls.salvar()
+        return True
+        
