@@ -1,6 +1,7 @@
 from .Carrinho import Carrinho, CarrinhoDAO
 from Admin.Produto import Produto, ProdutoDAO
 from Admin.Promocao import PromocaoDAO
+from Admin.Venda import Venda, VendaDAO
 
 class View:
     # CARRINHO
@@ -63,3 +64,17 @@ class View:
     @staticmethod
     def total_carrinho_com_desconto(idCliente):
         return CarrinhoDAO.total_com_desconto(idCliente)
+    # Permite ao entregador alterar o status simulando a ação de 'entregar_encomenda'
+    from Admin.Venda import Venda, VendaDAO
+
+    @staticmethod
+    def listar_pedidos_entregador(id_entregador):
+        VendaDAO.abrir()
+        return [v for v in VendaDAO.objetos if v.idEntregador == id_entregador]
+
+    @staticmethod
+    def atualizar_status_entrega(id_venda, novo_status):
+        venda = VendaDAO.listar_id(id_venda)
+        if venda:
+            venda.status_entrega = novo_status
+            VendaDAO.atualizar(venda)

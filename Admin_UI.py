@@ -15,11 +15,10 @@ class AdminUI:
         with st.sidebar:
             st.info(f"Bem vindo, Admin")
 
-
             aba_selecionada = option_menu(
                 menu_title = "Painel Admin",
-                options = ["Clientes", "Categorias", "Produtos", "Promoções"],
-                icons = ["people", "tags", "box-seam", "percent"],
+                options = ["Clientes", "Categorias", "Produtos", "Promoções", "Entregas"],
+                icons = ["people", "tags", "box-seam", "percent", "send"],
                 default_index = 0,
                 key = "admin_menu"
             )
@@ -63,13 +62,76 @@ class AdminUI:
                 AdminUI.produto_alterar_preco_geral()
 
         if aba_selecionada == "Promoções":
-            st.header("Gerenciamento de Promoções", divider="orange")
+            st.header("Gerenciamento de Promoções", divider="red")
             aba1, aba2 = st.tabs(["Inserir Promoção", "Excluir Promoção"])
 
             with aba1:
                 AdminUI.promocao_inserir()
             with aba2:
                 AdminUI.promocao_excluir()
+  
+        if aba_selecionada == "Entregas":
+            st.header("Alocação de Entregadores para Pedidos", divider="red")
+            
+            from Admin.Venda import VendaDAO
+            VendaDAO.abrir()
+            
+            # Filtra todas as vendas para verificar se possuem idEntregador maior que 0
+            vendas_alocadas = [v for v in VendaDAO.objetos if getattr(v, 'idEntregador', 0) > 0]
+            vendas_nao_alocadas = [v for v in VendaDAO.objetos if getattr(v, 'idEntregador', 0) == 0]
+            
+            if not VendaDAO.objetos:
+                st.info("Nenhum pedido foi realizado no sistema até o momento.")
+            else:
+                # Tabela Superior: Pedidos COM Entregador
+                st.subheader("Pedidos COM Entregador Alocado")
+                if vendas_alocadas:
+                    st.dataframe([v.to_dict() for v in vendas_alocadas], use_container_width=True,
+                                column_config={
+                                    "ID Compra": st.column_config.Column(alignment="left"),
+                                    "Total": st.column_config.Column(alignment="left")
+                                 })
+                else:
+                    st.info("Nenhum pedido possui entregador alocado no momento.")
+
+                # Tabela Inferior: Pedidos SEM Entregador
+                st.subheader("Pedidos SEM Entregador Alocado")
+                if vendas_nao_alocadas:
+                    st.dataframe([v.to_dict() for v in vendas_nao_alocadas], use_container_width=True, 
+                                 column_config={
+                                    "ID Compra": st.column_config.Column(alignment="left"),
+                                    "Total": st.column_config.Column(alignment="left")
+                                 })
+                else:
+                    st.success("Todos os pedidos já possuem entregadores alocados!")
+
+                st.divider()
+                st.subheader("Vincular Entregador à Compra")
+                entregadores = AdminView.entregador_listar()
+                
+                if not entregadores:
+                    st.warning("Nenhum entregador cadastrado no sistema para seleção.")
+                else:
+                    with st.form("form_alocacao"):
+                        id_venda_sel = st.number_input("Digite o ID da Compra:", min_value=1, step=1)
+                        
+                        # Cria dicionário de opções para exibição limpa na UI
+                        dict_entregadores = {e.id: f"{e.nome} (ID: {e.id})" for e in entregadores}
+                        id_entregador_sel = st.selectbox(
+                            "Selecione o Entregador:", 
+                            options=list(dict_entregadores.keys()), 
+                            format_func=lambda x: dict_entregadores[x]
+                        )
+                        
+                        btn_alocar = st.form_submit_button("Confirmar Alocação de Entrega")
+                        
+                    if btn_alocar:
+                        if AdminView.alocar_entregador_pedido(id_venda_sel, id_entregador_sel):
+                            st.success(f"Entregador alocado com sucesso ao Pedido #{id_venda_sel}!")
+                            time.sleep(1.5)
+                            st.rerun()
+                        else:
+                            st.error("Pedido não localizado. Verifique o ID digitado.")
 
     @staticmethod
     def sair() -> None:
@@ -152,7 +214,7 @@ class AdminUI:
                 st.subheader("Exclusão de Cliente")
                 id_str: str = st.text_input("Qual o id do cliente a ser excluído: ", value=1) or ''
                 id: int = int(id_str) if id_str.isdigit() else 0
-                submit: bool = st.form_submit_button("Excluir cliente", type="secondary")         
+                submit: bool = st.form_submit_button("Excluir cliente", type="secondary")        
 
             if submit:
                 AdminView.cliente_excluir(id)
@@ -327,7 +389,6 @@ class AdminUI:
 
                 image_arquivo = st.file_uploader("Selecione a nova imagem do produto(deixe em branco se quiser manter a atual)", type=['png', 'jpg', 'jpeg'])
 
-
                 submit: bool = st.form_submit_button("Atualizar produto", type="secondary")
 
             if submit:
@@ -343,7 +404,6 @@ class AdminUI:
                 st.rerun()
         except ValueError as erro:
             print(" ---- Erro ---->", erro)
-
 
     @staticmethod
     def produto_excluir() -> None:
@@ -417,7 +477,12 @@ class AdminUI:
         try:
             with st.form("form_inserir_promocao"):
                 lista_categorias = [c.to_dict() for c in AdminView.categoria_listar()]
-                st.dataframe(lista_categorias)
+                st.dataframe(lista_categorias,
+                             use_container_width=True,
+                             column_config={
+                                 "Id": st.column_config.Column(alignment="left"),
+                                 "Descrição": st.column_config.Column(alignment="left")
+                             })
 
                 st.subheader("Nova Promoção por Categoria")
                 idCategoria_str = st.text_input("ID da Categoria:", value="1") or "1"

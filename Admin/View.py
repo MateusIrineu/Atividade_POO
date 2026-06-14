@@ -3,6 +3,8 @@ from Admin.Categoria import Categoria, CategoriaDAO
 from Admin.Produto import Produto, ProdutoDAO
 from Admin.Promocao import Promocao, PromocaoDAO
 from Cliente.Carrinho import Carrinho, CarrinhoDAO
+from Admin.Entregador import Entregador, EntregadorDAO
+from Admin.Venda import Venda, VendaDAO
 
 class View:
     #CLIENTE
@@ -87,3 +89,22 @@ class View:
     def promocao_excluir(id):
         p = Promocao(id, 0, 0.0, "", "")
         PromocaoDAO.excluir(p)
+
+    @staticmethod
+    def entregador_inserir(nome, email, senha, fone):
+        e = Entregador(0, nome, email, senha, fone)
+        EntregadorDAO.inserir(e)
+
+    @staticmethod
+    def entregador_listar():
+        return EntregadorDAO.listar()
+
+    @staticmethod
+    def alocar_entregador_pedido(id_venda, id_entregador):
+        venda = VendaDAO.listar_id(id_venda)
+        if venda:
+            venda.idEntregador = id_entregador
+            venda.status_entrega = "Pronto para Retirada"
+            VendaDAO.atualizar(venda)
+            return True
+        return False

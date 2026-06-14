@@ -35,7 +35,7 @@ class ClienteInterface:
         elif aba_selecionada == "Meus Pedidos":
             ClienteInterface.ver_pedidos()
         
-    #VER PRODUTOS E ADICIONAR AO CARRINHO
+    # VER PRODUTOS E ADICIONAR AO CARRINHO
     @staticmethod
     def produto_listar()-> None:
         st.header("Produtos", divider="blue")
@@ -76,7 +76,7 @@ class ClienteInterface:
         except ValueError as erro:
             print(" ---- Erro ---->", erro)
 
-    #VER CARRINHO E FINALIZAR COMPRA
+    # VER CARRINHO E FINALIZAR COMPRA
     @staticmethod
     def meu_carrinho()-> None:
         st.header("Carrinho", divider="red")
@@ -119,20 +119,46 @@ class ClienteInterface:
         else:
             st.info("Seu Carrinho esta vazio no momento!")
     
+    # HISTÓRICO DE COMPRAS (MODIFICADO)
     @staticmethod
     def ver_pedidos()-> None:
-        st.header("Historico de Compras", divider="green")
+        st.header("Histórico de Compras e Status", divider="green")
+        
+        # 1. Tenta forçar a atualização do VendaDAO caso você esteja usando ele para salvar os status
+        try:
+            from Admin.Venda import VendaDAO
+            VendaDAO.abrir()
+        except ImportError:
+            pass # Evita quebrar caso a importação seja diferente no seu projeto
+
         try:   
             with st.container(border=True):
-                listar_compras = [p.to_dict() for p in ClienteView.listar_compras(st.session_state.id_cliente_logado)]
-                st.dataframe(
-                        listar_compras,
-                        column_config={
-                                "ID Compra": st.column_config.Column(alignment="left"),
-                                "Total": st.column_config.Column(alignment="left")
-                            })
+                compras = ClienteView.listar_compras(st.session_state.id_cliente_logado)
+                
+                if not compras:
+                    st.info("Você ainda não realizou nenhum pedido.")
+                else:
+                    listar_compras = []
+                    for p in compras:
+                        dic_compra = p.to_dict()
+                        # Extrai o status de forma segura. Se não existir, define como 'Pendente'
+                        status_atual = getattr(p, 'status', dic_compra.get('status', 'Pendente'))
+                        dic_compra['Status'] = status_atual
+                        listar_compras.append(dic_compra)
 
-        except ValueError as erro:
+                    st.dataframe(
+                            listar_compras,
+                            column_config={
+                                    "ID Compra": st.column_config.Column(alignment="left"),
+                                    "Total": st.column_config.Column(alignment="left"),
+                                    "Status": st.column_config.Column(alignment="left")
+                                })
+                
+                # 2. Botão para o cliente atualizar a tela e ver se o status mudou para 'Entregue'
+                if st.button("Atualizar Status de Entrega", type="primary"):
+                    st.rerun()
+
+        except Exception as erro:
             print(" ---- Erro ---->", erro)
 
     @staticmethod
